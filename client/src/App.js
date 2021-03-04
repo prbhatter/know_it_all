@@ -4,6 +4,7 @@ import Dashboard from './components/dashboard/Dashboard'
 import QuestionDetails from './components/questions/QuestionDetails'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
+import RaiseQuestion from './components/questions/RaiseQuestion'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path='/question/:id' component={QuestionDetails} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
+            <Route path='/raise' component={RaiseQuestion} />
         </Switch>
       </div>
     </BrowserRouter>

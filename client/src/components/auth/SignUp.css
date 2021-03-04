@@ -1,0 +1,28 @@
+/* #type ._2iA8p44d0WZ-WqRBGcAuEV{
+    border: none;
+    padding: 0;
+} */
+
+.searchBox::placeholder{
+    color: #9e9e9e;
+    font-size: 1rem;
+}
+
+#type .searchBox{
+    border-bottom: 1px solid #9e9e9e;
+    border-radius: 0;
+}
+
+#subject .searchBox {
+    border-bottom: 1px solid #9e9e9e;
+    border-radius: 0;
+}
+
+.multiselect-container .search-wrapper{
+    border: none;
+    padding: 0;
+}
+
+.multiselect-container .search-wrapper .chip{
+    background: #0096fb;
+}
