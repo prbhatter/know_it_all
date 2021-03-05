@@ -1,13 +1,14 @@
 import React from 'react'
 import QuestionSummary from './QuestionSummary'
 
-const QuestionList = () => {
+const QuestionList = ({questions}) => {
   return (
     <div className="question-list section">
-      <QuestionSummary />
-      <QuestionSummary />
-      <QuestionSummary />
-      <QuestionSummary />
+      { questions && questions.map(question => {
+        return (
+          <QuestionSummary question={question} key={question.id} />
+        )
+      })}
     </div>
   )
 }
