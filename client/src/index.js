@@ -3,16 +3,34 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore } from 'redux'
-import rootReducer from './store/reducers/rootReducer'
 import { Provider } from 'react-redux'
+// import configureStore from './configureStore'
+import { PersistGate } from 'redux-persist/integration/react'
 
-const store = createStore(rootReducer);
+// const store = createStore(rootReducer, applyMiddleware(thunk));
+
+import { createStore, applyMiddleware } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import thunk from 'redux-thunk'
+import rootReducer from './store/reducers/rootReducer'
+ 
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+  const store = createStore(persistedReducer, applyMiddleware(thunk))
+  const persistor = persistStore(store)
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+    <PersistGate loading={null} persistor={persistor}>
+        <App />
+    </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

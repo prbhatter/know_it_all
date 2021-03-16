@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Multiselect } from 'multiselect-react-dropdown';
 import '../auth/SignUp.css'
+import { raiseQuestion } from '../../store/actions/questionActions'
+import { connect } from 'react-redux'
 
 class RaiseQuestion extends Component {
   state = {
@@ -19,7 +21,8 @@ class RaiseQuestion extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
+    this.props.raiseQuestion(this.state)
   }
   render() {
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
@@ -52,4 +55,10 @@ class RaiseQuestion extends Component {
   }
 }
 
-export default RaiseQuestion
+const mapDispatchToProps = (dispatch) => {
+  return {
+    raiseQuestion: (question) => dispatch(raiseQuestion(question))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(RaiseQuestion)

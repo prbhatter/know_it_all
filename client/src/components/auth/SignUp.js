@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Multiselect } from 'multiselect-react-dropdown';
+import {Redirect} from 'react-router-dom';
 import './SignUp.css'
+import {register} from '../../store/actions/authActions'
+import {connect} from 'react-redux';
+
 
 class SignUp extends Component {
   state = {
@@ -37,7 +41,11 @@ class SignUp extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
+    console.log('before submit')
+    this.props.register(this.state)
+    console.log(this.props)
+    
   }
 
   render() {
@@ -57,10 +65,12 @@ class SignUp extends Component {
                                                                   />
                                                                 </div>
     
-    console.log(this.state)
+    const redir = this.props.isAuthenticated == true && <Redirect to='/' />
+    // console.log(this.state)
+    
     return (
-      
       <div className="container">
+        {redir}
         <form className="white" onSubmit={this.handleSubmit}>
           <h5 className="grey-text text-darken-3">Sign Up</h5>
 
@@ -76,7 +86,7 @@ class SignUp extends Component {
           
           <div className="input-field">
             <label htmlFor="uname">Username</label>
-            <input type="text" id="uname" onChange={this.handleChange} />
+            <input type="text" id="uname" onChange={this.handleChange}  required={true}/>
           </div>
 
           <div>
@@ -89,6 +99,7 @@ class SignUp extends Component {
               hidePlaceholder={true}
               onSelect={this.onSelect}
               onRemove={this.onSelect}
+              required={true}
             />
           </div>
 
@@ -96,12 +107,12 @@ class SignUp extends Component {
           
           <div className="input-field">
             <label htmlFor="email">Email</label>
-            <input type="email" id='email' onChange={this.handleChange} />
+            <input type="email" id='email' onChange={this.handleChange}  required={true}/>
           </div>
           
           <div className="input-field">
             <label htmlFor="password">Password</label>
-            <input type="password" id='password' onChange={this.handleChange} />
+            <input type="password" id='password' onChange={this.handleChange}  required={true}/>
           </div>
           
           <div className="input-field">
@@ -123,4 +134,14 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp
+const mapDispatchToProps = (dispatch) => {
+  return {
+    register: (user) => dispatch(register(user))
+  }
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
