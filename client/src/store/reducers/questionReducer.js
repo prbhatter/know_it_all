@@ -1,18 +1,24 @@
 const initState = {
   questions: [
-    {id: '1', content: 'What is Physics', subject: 'Physics'},
-    {id: '2', content: 'What is Maths', subject: 'Mathematics'},
-    {id: '3', content: 'What is Chemistry', subject: 'Chemistry'}
+    {_id: '1', content: 'What is Physics', subject: 'Physics'},
+    {_id: '2', content: 'What is Maths', subject: 'Mathematics'},
+    {_id: '3', content: 'What is Chemistry', subject: 'Chemistry'}
   ]
 }
 
+// const initState = {
+//   questions: []
+// }
+
 const questionReducer = (state = initState, action) => {
+  // console.log('questionReducer type', action.type)
+  // console.log('questionReducer state', state)
   switch (action.type) {
     case 'RAISE_QUESTION':
-      console.log('raise question', action.question);
+      console.log('raise question', action.payload);
       return {
         ...state,
-        questions: [action.payload, ...state.questions]
+        questions: [action.payload.question, ...state.questions]
       }
     case 'MY_QUESTIONS':
       console.log('my questions', action.question);
@@ -21,7 +27,7 @@ const questionReducer = (state = initState, action) => {
         myquestions: action.payload,
       }
     default:
-      console.log('raise question', action.question);
+      console.log('default questionReducer', state);
       return state
   }
 };

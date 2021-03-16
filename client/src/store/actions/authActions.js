@@ -29,7 +29,7 @@ export const register = (user) => async (dispatch) => {
   try {
     console.log('authActions register')
     const res = await axios.post('/register', body, config);
-    console.log(res)
+    console.log(res.data)
     if(res.data.type === 'USER_EXISTS' || res.data.type === 'EMAIL_EXISTS') {
       dispatch({
         type: res.data.type,
@@ -56,12 +56,11 @@ export const login = ({uname, password}) => async (dispatch) => {
       'Content-Type': 'application/json',
     },
   };
-  console.log('login authActions')
+  // console.log('login authActions')
   const body = JSON.stringify({uname, password});
-  console.log(body)
+  // console.log(body)
   try {
     const res = await axios.post('/login', body, config);
-    console.log(body)
     console.log('login authActions data recieved', res.data)
     if(res.data.type == 'NO_ACCESS') {
       dispatch({

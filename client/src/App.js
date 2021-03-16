@@ -13,14 +13,14 @@ class App extends Component {
   // const { questions } = this.props
   
   render() {
-    console.log(this.props.isAuthenticated)
-    const redir = this.props.isAuthenticated == true && <Redirect to='/' />
-    const SignInComponent = redir && SignIn
-    const SignUpComponent = redir && SignUp
+    // console.log(this.props.isAuthenticated)
+    // const redir = this.props.isAuthenticated == true && <Redirect to='/' />
+    // const SignInComponent = redir && <SignIn />
+    // const SignUpComponent = redir && <SignUp />
 
-    const redir2 = this.props.isAuthenticated == false && <Redirect to='/' />
-    const RaiseQuestionComponent = redir2 && RaiseQuestion
-    const MyQuestionsComponent = redir2 && MyQuestions
+    // const redir2 = this.props.isAuthenticated == false && <Redirect to='/' />
+    // const RaiseQuestionComponent = redir2 && <RaiseQuestion />
+    // const MyQuestionsComponent = redir2 && <MyQuestions />
     return (
       <BrowserRouter>
         <div className="App">
@@ -30,8 +30,8 @@ class App extends Component {
               <Route path='/question/:id' component={QuestionDetails} />
               <Route path='/signin' component={SignIn} />
               <Route path='/signup' component={SignUp} />
-              <Route path='/:uname/raise' component={RaiseQuestionComponent} />
-              <Route path='/:uname/my-questions' component={MyQuestionsComponent} />
+              <Route path='/raise' component={RaiseQuestion} />
+              <Route path='/my-questions' component={MyQuestions} />
           </Switch>
         </div>
       </BrowserRouter>

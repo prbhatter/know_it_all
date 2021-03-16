@@ -21,8 +21,10 @@ class RaiseQuestion extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(this.state);
-    this.props.raiseQuestion(this.state)
+    
+    const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname }
+    console.log('submit raise', question);
+    this.props.raiseQuestion(question)
   }
   render() {
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
@@ -61,4 +63,11 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(RaiseQuestion)
+const mapStateToProps = (state) => {
+  // console.log('raise question', state.auth.user)
+  return {
+    user: state.auth.user
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RaiseQuestion)

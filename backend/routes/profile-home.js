@@ -9,7 +9,7 @@ const flash = require('express-flash')
 router.use(flash())
 
 //Successful login
-router.get('/', checkAuthenticated, async (req, res) => {
+router.get('/recent-questions', async (req, res) => {
 
     const questions = await questionModel.find().sort({ creationTime: -1 }).limit(15)
     let i,comments
@@ -17,8 +17,8 @@ router.get('/', checkAuthenticated, async (req, res) => {
         comments = await commentModel.find({ questionId: questions[i]._id }).sort({ creationTime: -1 }).limit(3)
         questions[i].coms = comments
     }
-
-    res.render('login-success.ejs', { questions: questions })
+    console.log('backend', questions)
+    return res.status(200).json({type: 'RECENT_QUESTIONS', questions: questions})
 })
 
 //My Questions page for Tutor and Student
@@ -45,9 +45,10 @@ router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
     return res.json(questions)
 })
 
-router.post('/:uname/my-questions', checkAuthenticated, async (req, res) => {
+router.post('/:uname/my-questions', async (req, res) => {
     
     const uname = req.params.uname
+    console.log('uname profile home',uname)
     const content = req.body.content
     const subject = req.body.subject
     const isAnswered = false
@@ -94,8 +95,8 @@ router.post('/:uname/my-questions', checkAuthenticated, async (req, res) => {
             { uname: uname },
             { $addToSet: { questions: [ model._id ] } },
             { new: true })
-    
-    res.redirect(`/student/${uname}/my-questions`)
+    // console.log('question model', model)
+    return res.status(200).json({type: 'RAISE_QUESTION', question: model})
 })
 
 router.post('/tutor/:uname/my-questions/:id', checkAuthenticated, async (req, res) => {

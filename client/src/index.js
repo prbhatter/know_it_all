@@ -20,9 +20,12 @@ const persistConfig = {
   storage,
 }
 
+// console.log(storage)
+
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
   const store = createStore(persistedReducer, applyMiddleware(thunk))
+  // const store = createStore(rootReducer, applyMiddleware(thunk))
   const persistor = persistStore(store)
 
 ReactDOM.render(
