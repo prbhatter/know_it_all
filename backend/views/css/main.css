@@ -1,0 +1,9 @@
+.hide{
+    display:none;
+}
+
+.show{
+    display:block;
+}
+
+body {background-color: #92a8d1;}
