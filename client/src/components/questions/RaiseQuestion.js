@@ -3,11 +3,13 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import '../auth/SignUp.css'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 class RaiseQuestion extends Component {
   state = {
     subject: '',
-    content: ''
+    content: '',
+    navigate: false
   }
   handleChange = (e) => {
     this.setState({
@@ -21,15 +23,21 @@ class RaiseQuestion extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    
+    // console.log(this.props)
     const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname }
-    console.log('submit raise', question);
+    // console.log('submit raise', question);
     this.props.raiseQuestion(question)
+    this.setState({
+      navigate: true
+    })
   }
   render() {
+    // console.log('raiseQuestion.js', this.props)
+    const Navigate = ((!this.props.isAuthenticated) || this.state.navigate) && <Redirect to='/' />
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
     return (
       <div className="container">
+        { Navigate }
         <form className="white" onSubmit={this.handleSubmit}>
           <h5 className="grey-text text-darken-3">Raise a New Question</h5>
           <div className="input-field">
@@ -64,9 +72,10 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-  // console.log('raise question', state.auth.user)
+  // console.log('raise question', state.auth)
   return {
-    user: state.auth.user
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated
   }
 }
 

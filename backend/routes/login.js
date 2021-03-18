@@ -22,11 +22,11 @@ router.post('/login', checkNotAuthenticated ,passport.authenticate('signin', {
     failureRedirect: '/login/failed',
     failureFlash: true
 }), async (req, res) => {
-    console.log('login before model')
+    // console.log('login before model')
     await userModel.findOne({
         uname: req.body.uname
     }, async (err,doc) => {
-        console.log('login.js')
+        // console.log('login.js')
         try{
             if(doc) {
                 return res.status(200).json({type: 'LOGIN_SUCCESS', user: doc})
@@ -48,7 +48,7 @@ router.delete('/logout', (req, res) => {
     // const type = req.params.type
     req.logOut()    // logOut function by Passport
     req.session.destroy()
-    console.log('logout')
+    // console.log('logout')
     return res.status(200).json({type: 'LOGOUT_SUCCESS'})
 })
 

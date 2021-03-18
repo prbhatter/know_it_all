@@ -17,7 +17,7 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
     if(!req.body) {
         return res.status(400).send('Request body is empty')
     }
-    console.log('registered', req.body)
+    // console.log('registered', req.body)
     // return res.status(200).json({"data": "Server"})
     
     const firstname = req.body.firstName
@@ -55,7 +55,7 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                     subjects: subjects,
                     whatsapp: whatsapp
                 }
-                if(type == 'tutor') {
+                if(type == 'Tutor') {
                     //console.log(typeof(subjects))
                     let len
                     let ques = []
@@ -74,7 +74,7 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                         else {
                             sub = subjects[i]
                         }
-                        //console.log(sub)
+                        // console.log(sub)
                         await questionModel.updateMany({
                             subject: sub, tutname: 'None'
                         }, { tutname: uname })
@@ -82,23 +82,23 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                         const questions = await questionModel.find({
                             subject: sub, tutname: uname
                         })
-                        //console.log('After update')
+                        // console.log('After update', questions)
                         if(questions && questions.length) {
                             for(let j=0; j<questions.length; j++) {
                                 ques.push(questions[j]._id)
                             }
                         }
                     }
-                    //console.log(ques)
+                    // console.log('questions: ', ques)
 
                     if(ques.length){
                         user.questions = ques
                     }
                 }
-                console.log(user)
+                // console.log(user)
                 let model = new userModel(user);
                 await model.save()
-                return res.status(200).json({type: 'REGISTER_SUCCESS'})                //Successful registration, redirect to respective login page
+                return res.status(200).json({type: 'REGISTER_SUCCESS', user: model})                //Successful registration, redirect to respective login page
                 
             }
         } catch(err) {

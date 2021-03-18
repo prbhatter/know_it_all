@@ -15,13 +15,13 @@ class SignIn extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log('signin submit', this.state);
+    // console.log('signin submit', this.state);
     this.props.login(this.state)
   }
   render() {
     
     const redir = this.props.isAuthenticated == true && <Redirect to='/' />
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <div className="container">
         {redir}

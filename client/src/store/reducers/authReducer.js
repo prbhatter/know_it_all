@@ -26,7 +26,7 @@ const authReducer = (state = initialState, action) => {
 
     case 'REGISTER_SUCCESS':
     case 'LOGIN_SUCCESS':
-      console.log('LOGIN_SUCCESS authReducer', action.payload)
+      // console.log('LOGIN_SUCCESS authReducer', action.payload)
       return {
         ...state,
         ...action.payload,
@@ -43,7 +43,7 @@ const authReducer = (state = initialState, action) => {
   //   case 'REGISTER_FAIL':
   //   case 'AUTH_ERROR':
     case 'NO_ACCESS':
-      console.log('NO_ACCESS authReducer')
+      // console.log('NO_ACCESS authReducer')
       return {
         ...state,
   //       token: null,
@@ -52,7 +52,7 @@ const authReducer = (state = initialState, action) => {
       };
     case 'LOGIN_FAILED':
     case 'LOGOUT_SUCCESS':
-      console.log('LOGOUT_SUCCESS authReducer')
+      // console.log('LOGOUT_SUCCESS authReducer', state)
       return {
         ...state,
   //       token: null,

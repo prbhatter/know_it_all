@@ -14,8 +14,10 @@ const rootReducer = (state, action) => {
       // other keys will be passed as undefined and this will call
       // reducers with an initial state
     //   const { auth, question } = state;
-
-      state = undefined;
+      // console.log('root reducer', state)
+      const ques = state.question.questions
+      state = undefined
+      state = {question: {questions: ques}}
       // storage.removeItem('persist:root')
     }
   

@@ -17,7 +17,7 @@ router.get('/recent-questions', async (req, res) => {
         comments = await commentModel.find({ questionId: questions[i]._id }).sort({ creationTime: -1 }).limit(3)
         questions[i].coms = comments
     }
-    console.log('backend', questions)
+    // console.log('backend', questions)
     return res.status(200).json({type: 'RECENT_QUESTIONS', questions: questions})
 })
 
@@ -65,7 +65,7 @@ router.post('/:uname/my-questions', async (req, res) => {
     }
 
     let tut = await userModel.find({ subjects: subject })
-
+    console.log(tut)
     let i,pos
     if(tut.length) {
         let low = (tut[0].questions).length
@@ -95,7 +95,7 @@ router.post('/:uname/my-questions', async (req, res) => {
             { uname: uname },
             { $addToSet: { questions: [ model._id ] } },
             { new: true })
-    // console.log('question model', model)
+    console.log('question model', model)
     return res.status(200).json({type: 'RAISE_QUESTION', question: model})
 })
 

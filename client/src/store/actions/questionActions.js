@@ -14,11 +14,10 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
     },
   };
   const uname = question.uname
-  console.log('raise',uname)
+  // console.log('raise',uname)
   try {
-    // const res = await axios.post(`/${uname}/my-questions`, question, config);
-    const res = await axios.post(`/ap/my-questions`, question, config);
-    console.log(res.data)
+    const res = await axios.post(`/${uname}/my-questions`, question, config);
+    // console.log(res.data)
     dispatch({
       type: 'RAISE_QUESTION',
       payload: res.data,
@@ -47,7 +46,7 @@ export const myQuestions = (uname) => async (dispatch, getState) => {
 
   try {
     const res = await axios.get(`/${uname}/my-questions`);
-    console.log('myQuestions questionActions',res.data)
+    // console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'MY_QUESTIONS',
       payload: res.data,
@@ -58,7 +57,7 @@ export const myQuestions = (uname) => async (dispatch, getState) => {
     // dispatch(getPosts());
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
-
+    console.log(err)
     dispatch({
       type: 'QUESTION_ERROR',
       payload: {msg: err.response.statusText, status: err.response.status},
@@ -73,10 +72,10 @@ export const recentQuestions = () => async (dispatch, getState) => {
     },
   };
 
-  console.log('recent questions')
+  // console.log('recent questions')
   try {
     const res = await axios.get('/recent-questions');
-    console.log('recent questions', res.data)
+    // console.log('recent questions', res.data)
     dispatch({
       type: 'RECENT_QUESTIONS',
       payload: res.data,

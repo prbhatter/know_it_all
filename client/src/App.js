@@ -21,10 +21,11 @@ class App extends Component {
     // const redir2 = this.props.isAuthenticated == false && <Redirect to='/' />
     // const RaiseQuestionComponent = redir2 && <RaiseQuestion />
     // const MyQuestionsComponent = redir2 && <MyQuestions />
+    // console.log('app js', this.props)
     return (
       <BrowserRouter>
         <div className="App">
-          <Navbar />
+          <Navbar/>
           <Switch>
               <Route exact path='/' component={Dashboard} />
               <Route path='/question/:id' component={QuestionDetails} />

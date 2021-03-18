@@ -2,10 +2,16 @@ import React, { Component } from 'react'
 import QuestionList from '../questions/QuestionList'
 import Notifications from './Notifications'
 import { connect } from 'react-redux'
+import { recentQuestions } from '../../store/actions/questionActions'
 
 class Dashboard extends Component {
+
+  componentDidMount() {
+    this.props.recentQuestions()
+  }
+
   render() {
-    console.log(this.props)
+    // console.log('dashboard after logout', this.props)
     const { questions } = this.props
     return (
       <div className="dashboard container">
@@ -23,10 +29,16 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('dasboard map', state)
+  // console.log('dasboard map', state)
   return {
     questions: state.question.questions
   }
 }
 
-export default connect(mapStateToProps)(Dashboard)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    recentQuestions: () => dispatch(recentQuestions())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

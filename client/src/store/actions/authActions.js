@@ -27,9 +27,9 @@ export const register = (user) => async (dispatch) => {
   const body = JSON.stringify(user);
 
   try {
-    console.log('authActions register')
+    // console.log('authActions register')
     const res = await axios.post('/register', body, config);
-    console.log(res.data)
+    // console.log(res.data)
     if(res.data.type === 'USER_EXISTS' || res.data.type === 'EMAIL_EXISTS') {
       dispatch({
         type: res.data.type,
@@ -61,7 +61,7 @@ export const login = ({uname, password}) => async (dispatch) => {
   // console.log(body)
   try {
     const res = await axios.post('/login', body, config);
-    console.log('login authActions data recieved', res.data)
+    // console.log('login authActions data recieved', res.data)
     if(res.data.type == 'NO_ACCESS') {
       dispatch({
         type: 'NO_ACCESS',
@@ -84,7 +84,7 @@ export const login = ({uname, password}) => async (dispatch) => {
     // dispatch(loadUser());
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
-
+    console.log(err)
     dispatch({
       type: 'LOGIN_FAILED',
     });
@@ -94,7 +94,7 @@ export const login = ({uname, password}) => async (dispatch) => {
 //LOGOUT
 export const logout = () => async(dispatch) => {
 //   dispatch(setAlert('User has logged out', 'success'));
-  console.log('logout authActions')
+  // console.log('logout authActions')
   const res = await axios.delete('/logout');
   dispatch({type: 'LOGOUT_SUCCESS'});
 };
