@@ -13,16 +13,7 @@ class App extends Component {
   // const { questions } = this.props
   
   render() {
-    // console.log(this.props.isAuthenticated)
-    // const redir = this.props.isAuthenticated == true && <Redirect to='/' />
-    // const SignInComponent = redir && <SignIn />
-    // const SignUpComponent = redir && <SignUp />
-
-    // const redir2 = this.props.isAuthenticated == false && <Redirect to='/' />
-    // const RaiseQuestionComponent = redir2 && <RaiseQuestion />
-    // const MyQuestionsComponent = redir2 && <MyQuestions />
-    // console.log('app js', this.props)
-    return (
+   return (
       <BrowserRouter>
         <div className="App">
           <Navbar/>
