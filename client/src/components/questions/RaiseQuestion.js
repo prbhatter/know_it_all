@@ -9,7 +9,9 @@ class RaiseQuestion extends Component {
   state = {
     subject: '',
     content: '',
-    navigate: false
+    navigate: false,
+    visibility: 'Public',
+    anonymous: 'No'
   }
   handleChange = (e) => {
     this.setState({
@@ -21,10 +23,20 @@ class RaiseQuestion extends Component {
         subject: selectedItem.option
       })
   }
+  onSelect2 = (selectedList, selectedItem) => {
+    this.setState({
+      visibility: selectedItem.option
+    })
+  }
+  onSelect3 = (selectedList, selectedItem) => {
+    this.setState({
+      anonymous: selectedItem.option
+    })
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     // console.log(this.props)
-    const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname }
+    const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
     // console.log('submit raise', question);
     this.props.raiseQuestion(question)
     this.setState({
@@ -35,6 +47,21 @@ class RaiseQuestion extends Component {
     // console.log('raiseQuestion.js', this.props)
     const Navigate = ((!this.props.isAuthenticated) || this.state.navigate) && <Redirect to='/' />
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
+    let visibilityOptions = [{option: 'Private'}, {option: 'Public'}]
+    let anonymousOptions = [{option: 'Yes'}, {option: 'No'}]
+
+    const anonymousDropdown =  (this.state.visibility === 'Public') &&  <div className="input-field">
+                                                                    <Multiselect
+                                                                    id='anonymous'
+                                                                    options={anonymousOptions} // Options to display in the dropdown
+                                                                    displayValue="option" // Property name to display in the dropdown options
+                                                                    placeholder="Anonymity"
+                                                                    hidePlaceholder={true}
+                                                                    onSelect={this.onSelect3}
+                                                                    onRemove={this.onSelect3}
+                                                                  />
+                                                                </div>
+
     return (
       <div className="container">
         { Navigate }
@@ -52,6 +79,21 @@ class RaiseQuestion extends Component {
               onRemove={this.onSelect}
             />
           </div>
+          <div className="input-field">
+            <Multiselect
+              id='visibility'
+              options={visibilityOptions} // Options to display in the dropdown
+              displayValue="option" // Property name to display in the dropdown options
+              placeholder="Visibility"
+              hidePlaceholder={true}
+              singleSelect={true}
+              onSelect={this.onSelect2}
+              onRemove={this.onSelect2}
+            />
+          </div>
+          
+          { anonymousDropdown }
+
           <div className="input-field">
             <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
             <label htmlFor="content">Question Content</label>

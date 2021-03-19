@@ -11,6 +11,14 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    visibility: {
+        type: String,
+        default: 'Private'
+    },
+    anonymous: {
+        type: String,
+        default: 'No'
+    },
     isAnswered: {
         type: Boolean,
         required: true

@@ -11,7 +11,7 @@ router.use(flash())
 //Successful login
 router.get('/recent-questions', async (req, res) => {
 
-    const questions = await questionModel.find().sort({ creationTime: -1 }).limit(15)
+    const questions = await questionModel.find({visibility: 'Public'}).sort({ creationTime: -1 }).limit(15)
     let i,comments
     for(i=0; i<questions.length; i++) {
         comments = await commentModel.find({ questionId: questions[i]._id }).sort({ creationTime: -1 }).limit(3)
@@ -54,6 +54,8 @@ router.post('/:uname/my-questions', async (req, res) => {
     const isAnswered = false
     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
     const expirationTime = Math.floor(Date.now()/1000) + 200              // 1 day = 86400 seconds
+    const visibility = req.body.visibility
+    const anonymous = req.body.anonymous
 
     let question = {
         content: content,
@@ -62,24 +64,26 @@ router.post('/:uname/my-questions', async (req, res) => {
         creationTime: creationTime,
         expirationTime: expirationTime,
         stuname: uname,
+        visibility: visibility,
+        anonymous: anonymous
     }
 
-    let tut = await userModel.find({ subjects: subject })
-    console.log(tut)
-    let i,pos
-    if(tut.length) {
-        let low = (tut[0].questions).length
-        pos = 0
-        for(i=1; i<tut.length; i++) {
-            if(tut.uname !== uname && (tut[i].questions).length < low) {
-                low = (tut[i].questions).length
-                pos = i
+        let tut = await userModel.find({ subjects: subject })
+        console.log(tut)
+        let i,pos
+        if(tut.length) {
+            let low = (tut[0].questions).length
+            pos = 0
+            for(i=1; i<tut.length; i++) {
+                if(tut.uname !== uname && (tut[i].questions).length < low) {
+                    low = (tut[i].questions).length
+                    pos = i
+                }
             }
+            question.tutname = tut[pos].uname
+        } else {
+            question.tutname = 'None'
         }
-        question.tutname = tut[pos].uname
-    } else {
-        question.tutname = 'None'
-    }
 
     let model = new questionModel(question);
     await model.save()
