@@ -5,8 +5,11 @@ import { connect } from 'react-redux'
 import { myQuestions } from '../../store/actions/questionActions'
 
 class MyQuestions extends Component {
+  componentDidMount() {
+    this.props.myQuestions(this.props.uname)
+  }
   render() {
-    // console.log(this.props)
+    console.log(this.props)
     const { myquestions } = this.props
     return (
       <div className="dashboard container">
@@ -25,10 +28,10 @@ class MyQuestions extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    questions: state.question.myquestions
+    myquestions: state.question.myquestions,
+    uname: state.auth.user.uname
   }
 }
-
 
 const mapDispatchToProps = (dispatch) => {
   return {

@@ -24,7 +24,7 @@ const questionReducer = (state = initState, action) => {
       // console.log('my questions', action.question);
       return {
         ...state,
-        myquestions: action.payload,
+        myquestions: action.payload.myquestions,
       }
     case 'RECENT_QUESTIONS':
       // console.log('recent questions', action.payload)

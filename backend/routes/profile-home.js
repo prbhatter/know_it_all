@@ -25,24 +25,29 @@ router.get('/recent-questions', async (req, res) => {
 router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
     
     const uname = req.params.uname
-
+    console.log(uname)
+    
     let user = await userModel.findOne({ uname: uname })
     // let questions = await questionModel.find({ stuname: uname }).sort({ creationTime: -1 })
+    console.log(user)
 
     let i,j,question
     let comments
     let questions = []
-    for(i=0; i<user.questions.length; i++) {
-        question = await questionModel.find({ _id: (user.questions)[i] })
+    for(i=user.questions.length-1; i>=0; i--) {
+        question = await questionModel.findOne({ _id: (user.questions)[i] })
+        
+        console.log(question)
+
         comments = []
-        for(j=0; j<question.comments.length; j++) {
+        for(j=question.comments.length-1; j>=0; j--) {
             comments.push(await commentModel.find({ _id: question.comments[j] }))
         }
         question.comments = comments
         questions.push(question)
     }
     
-    return res.json(questions)
+    return res.status(200).json({type: 'MY_QUESTIONS', myquestions: questions})
 })
 
 router.post('/:uname/my-questions', async (req, res) => {

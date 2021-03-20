@@ -2,7 +2,7 @@ import React from 'react'
 // import { moment } from 'moment'
 
 const QuestionSummary = ({question}) => {
-  const name = ( question.anonymous ) ? 'Anonymous' : question.stuname
+  const name = ( question.anonymous == 'Yes' ) ? 'Anonymous' : question.stuname
   const utc = question.creationTime
   // const m = moment.unix(utc).utc().format('YYYY-MM-DD HH:mm:ss');
   // console.log(m);
