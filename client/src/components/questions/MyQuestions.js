@@ -8,11 +8,7 @@ class MyQuestions extends React.PureComponent {
   componentDidMount() {
     this.props.myQuestions(this.props.uname)
   }
-  // shouldComponentUpdate(){
-
-  // }
   render() {
-    console.log(this.props)
     const { myquestions } = this.props
     return (
       <div className="dashboard container">

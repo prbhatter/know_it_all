@@ -44,7 +44,7 @@ class RaiseQuestions extends Component {
     this.setState({
       navigate: true
     })
-    //this.props.history.push("/my-questions")
+    this.props.history.push("/my-questions")
 
   }
   render() {
