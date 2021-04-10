@@ -37,9 +37,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    questions: {
+    meraquestions: {
+        type: [ String ]
+    },
+    merekodiyaquestions: {
         type: [ String ]
     }
+    
 })
 
 userSchema.index({ uname: 1 })

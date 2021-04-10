@@ -20,30 +20,41 @@ router.get('/recent-questions', async (req, res) => {
     // console.log('backend', questions)
     return res.status(200).json({type: 'RECENT_QUESTIONS', questions: questions})
 })
-
+router.get('/:uname/assigned-questions', checkAuthenticated, async (req, res) => {
+    const uname = req.params.uname
+    console.log(uname)
+    let user = await userModel.findOne({ uname: uname })
+    let questions = []
+    for(i=user.merekodiyaquestions.length-1; i>=0; i--) {
+        question = await questionModel.findOne({ _id: (user.merekodiyaquestions)[i] })
+        console.log('profile home',question)
+        questions.push(question)
+    }
+    return res.status(200).json({type: 'ASSIGNED_QUESTIONS', assignquestions: questions})
+})
 //My Questions page for Tutor and Student
 router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
     
     const uname = req.params.uname
-    console.log(uname)
+    //console.log(uname)
     
     let user = await userModel.findOne({ uname: uname })
     // let questions = await questionModel.find({ stuname: uname }).sort({ creationTime: -1 })
-    console.log(user)
+    //console.log('QUEE',user)
 
     let i,j,question
     let comments
     let questions = []
-    for(i=user.questions.length-1; i>=0; i--) {
-        question = await questionModel.findOne({ _id: (user.questions)[i] })
+    for(i=user.meraquestions.length-1; i>=0; i--) {
+       // console.log('BC',(user.meraquestions)[i])    
+        question = await questionModel.findOne({ _id: ((user.meraquestions)[i]) })
         
-        console.log(question)
 
-        comments = []
-        for(j=question.comments.length-1; j>=0; j--) {
-            comments.push(await commentModel.find({ _id: question.comments[j] }))
-        }
-        question.comments = comments
+        // comments = []
+        // for(j=question.comments.length-1; j>=0; j--) {
+        //     comments.push(await commentModel.find({ _id: question.comments[j] }))
+        // }
+        // question.comments = comments
         questions.push(question)
     }
     
@@ -53,16 +64,17 @@ router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
 router.post('/:uname/my-questions', async (req, res) => {
     
     const uname = req.params.uname
-    console.log('uname profile home',uname)
+   // console.log('uname profile home',uname)
     const content = req.body.content
     const subject = req.body.subject
     const isAnswered = false
     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-    const expirationTime = Math.floor(Date.now()/1000) + 200              // 1 day = 86400 seconds
+    const expirationTime = Math.floor(Date.now()/1000) + 86400              // 1 day = 86400 seconds
     const visibility = req.body.visibility
     const anonymous = req.body.anonymous
 
-    let question = {
+    let question = 
+    {
         content: content,
         subject: subject,
         isAnswered: isAnswered,
@@ -74,35 +86,37 @@ router.post('/:uname/my-questions', async (req, res) => {
     }
 
         let tut = await userModel.find({ subjects: subject })
-        console.log(tut)
+       // console.log('profile home',tut)
         let i,pos
         if(tut.length) {
-            let low = (tut[0].questions).length
+            let low = (tut[0].meraquestions).length
             pos = 0
             for(i=1; i<tut.length; i++) {
-                if(tut.uname !== uname && (tut[i].questions).length < low) {
-                    low = (tut[i].questions).length
+                if(tut.uname !== uname && (tut[i].meraquestions).length < low) {
+                    low = (tut[i].meraquestions).length
                     pos = i
                 }
             }
-            question.tutname = tut[pos].uname
+            question.tutname = tut[pos].uname 
         } else {
             question.tutname = 'None'
         }
 
     let model = new questionModel(question);
+
     await model.save()
 
     if(tut.length) {
         await userModel.updateOne(
             { uname: tut[pos].uname },
-            { $addToSet: { questions: [ model._id ] } },
+            { $addToSet: { merekodiyaquestions: [ model._id ] } },
             { new: true })
-    }
 
+    }
+    
     await userModel.updateOne(
             { uname: uname },
-            { $addToSet: { questions: [ model._id ] } },
+            { $addToSet: { meraquestions: [ model._id ] } },
             { new: true })
     console.log('question model', model)
     return res.status(200).json({type: 'RAISE_QUESTION', question: model})

@@ -6,7 +6,7 @@ import axios from 'axios';
       dispatch({ type: 'RAISE_QUESTION', question });
     }
 }*/
-
+ 
 export const raiseQuestion = (question) => async (dispatch, getState) => {
   const config = {
     headers: {
@@ -14,7 +14,7 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
     },
   };
   const uname = question.uname
-  // console.log('raise',uname)
+  // console.log('raise',uname) 
   try {
     const res = await axios.post(`/${uname}/my-questions`, question, config);
     // console.log(res.data)
@@ -22,7 +22,8 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
       type: 'RAISE_QUESTION',
       payload: res.data,
     });
-
+    dispatch(myQuestions());
+    dispatch(recentQuestions());
     // dispatch(setAlert(res.data.message, 'success'));
 
     // dispatch(getPosts());
@@ -35,6 +36,38 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
     });
   }
 };
+
+export const assignedQuestions = (uname) => async (dispatch, getState) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json' ,
+    },
+  };
+
+  try {
+    const res = await axios.get(`/${uname}/assigned-questions`);
+    // console.log('myQuestions questionActions',res.data)
+    dispatch({
+      type: 'ASSIGNED_QUESTIONS',
+      payload: res.data,
+    });
+
+    // dispatch(setAlert(res.data.message, 'success'));
+
+    // dispatch(getPosts());
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+    console.log(err)
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
+
+
+
 
 
 export const myQuestions = (uname) => async (dispatch, getState) => {

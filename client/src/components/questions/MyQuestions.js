@@ -4,10 +4,13 @@ import Notifications from '../dashboard/Notifications'
 import { connect } from 'react-redux'
 import { myQuestions } from '../../store/actions/questionActions'
 
-class MyQuestions extends Component {
+class MyQuestions extends React.PureComponent {
   componentDidMount() {
     this.props.myQuestions(this.props.uname)
   }
+  // shouldComponentUpdate(){
+
+  // }
   render() {
     console.log(this.props)
     const { myquestions } = this.props
@@ -27,6 +30,7 @@ class MyQuestions extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('my questions js',state.question.myquestions)
   return {
     myquestions: state.question.myquestions,
     uname: state.auth.user.uname

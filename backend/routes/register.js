@@ -92,7 +92,7 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                     // console.log('questions: ', ques)
 
                     if(ques.length){
-                        user.questions = ques
+                        user.merekodiyaquestions = ques
                     }
                 }
                 // console.log(user)

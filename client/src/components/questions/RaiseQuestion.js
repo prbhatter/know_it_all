@@ -4,8 +4,9 @@ import '../auth/SignUp.css'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { withRouter } from "react-router";
 
-class RaiseQuestion extends Component {
+class RaiseQuestions extends Component {
   state = {
     subject: '',
     content: '',
@@ -35,17 +36,19 @@ class RaiseQuestion extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
+    //console.log('raiseQuestion.js', this.props)
     // console.log(this.props)
     const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
-    // console.log('submit raise', question);
+    console.log('submit raise', question);
     this.props.raiseQuestion(question)
     this.setState({
       navigate: true
     })
+    //this.props.history.push("/my-questions")
+
   }
   render() {
-    // console.log('raiseQuestion.js', this.props)
-    const Navigate = ((!this.props.isAuthenticated) || this.state.navigate) && <Redirect to='/' />
+  //  const Navigate = ((!this.props.isAuthenticated) || this.state.navigate) && <Redirect to='/my-questions' />
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
     let visibilityOptions = [{option: 'Private'}, {option: 'Public'}]
     let anonymousOptions = [{option: 'Yes'}, {option: 'No'}]
@@ -53,7 +56,7 @@ class RaiseQuestion extends Component {
     const anonymousDropdown =  (this.state.visibility === 'Public') &&  <div className="input-field">
                                                                     <Multiselect
                                                                     id='anonymous'
-                                                                    options={anonymousOptions} // Options to display in the dropdown
+                                                                     options={anonymousOptions} // Options to display in the dropdown
                                                                     displayValue="option" // Property name to display in the dropdown options
                                                                     placeholder="Anonymity"
                                                                     hidePlaceholder={true}
@@ -64,7 +67,7 @@ class RaiseQuestion extends Component {
 
     return (
       <div className="container">
-        { Navigate }
+        {/* { Navigate } */}
         <form className="white" onSubmit={this.handleSubmit}>
           <h5 className="grey-text text-darken-3">Raise a New Question</h5>
           <div className="input-field">
@@ -102,6 +105,7 @@ class RaiseQuestion extends Component {
             <button className="btn pink lighten-1">Raise</button>
           </div>
         </form>
+          {/* { Navigate } */}
       </div>
     )
   }
@@ -120,5 +124,5 @@ const mapStateToProps = (state) => {
     isAuthenticated: state.auth.isAuthenticated
   }
 }
-
+const RaiseQuestion = withRouter(RaiseQuestions);
 export default connect(mapStateToProps, mapDispatchToProps)(RaiseQuestion)

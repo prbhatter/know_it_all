@@ -1,5 +1,4 @@
 import React from 'react'
-
 const Notifications = () => {
   return (
     <div>
@@ -7,5 +6,4 @@ const Notifications = () => {
     </div>
   )
 }
-
 export default Notifications

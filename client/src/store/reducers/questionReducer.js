@@ -20,11 +20,17 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: [action.payload.question, ...state.questions]
       }
-    case 'MY_QUESTIONS':
-      // console.log('my questions', action.question);
+    case 'MY_QUESTIONS': 
+      console.log('my questions question reducer', action.question);
       return {
         ...state,
         myquestions: action.payload.myquestions,
+      }
+      case 'ASSIGNED_QUESTIONS':
+      // console.log('my questions', action.question);
+      return {
+        ...state,
+        assignquestions: action.payload.assignquestions,
       }
     case 'RECENT_QUESTIONS':
       // console.log('recent questions', action.payload)
