@@ -16,13 +16,13 @@ const rootReducer = (state, action) => {
     //   const { auth, question } = state;
       // console.log('root reducer', state)
       const ques = state.question.questions
-      state = undefined
-      state = {question: {questions: ques}}
+      // state = undefined
+      // state = {question: {questions: ques}}
       // storage.removeItem('persist:root')
     }
   
     return appReducer(state, action);
-};
+}; 
 
 export default rootReducer
 

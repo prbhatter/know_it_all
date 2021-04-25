@@ -4,20 +4,20 @@ import Notifications from '../dashboard/Notifications'
 import { connect } from 'react-redux'
 import { myQuestions } from '../../store/actions/questionActions'
 
-class MyQuestions extends React.PureComponent {
+class MyQuestions extends React.Component {
   componentDidMount() {
     this.props.myQuestions(this.props.uname)
-  }
+  } 
   render() {
     const { myquestions } = this.props
     return (
       <div className="dashboard container">
         <div className="row">
-          <div className="col s12 m6">
-            <QuestionList questions={myquestions}/>
+          <div className="col s12 m6"> 
+            <QuestionList questions={myquestions} assignedquestionpage={false}/>
           </div>
           <div className="col s12 m5 offset-m1">
-            <Notifications />
+            <Notifications /> 
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@ class MyQuestions extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log('my questions js',state.question.myquestions)
+  console.log('my questions js',state.question.myquestions) 
   return {
     myquestions: state.question.myquestions,
     uname: state.auth.user.uname

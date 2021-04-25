@@ -18,4 +18,4 @@ const QuestionDetails = (props) => {
   )
 }
 
-export default QuestionDetails
+export default QuestionDetails 

@@ -7,6 +7,7 @@ import SignUp from './components/auth/SignUp'
 import RaiseQuestion from './components/questions/RaiseQuestion'
 import MyQuestions from './components/questions/MyQuestions'
 import AssignQuestions from './components/questions/AssignQuestions'
+import Answer from './components/questions/AnswerQuestion'
 import { Component } from 'react'
 import {connect} from 'react-redux';
 
@@ -26,6 +27,7 @@ class App extends Component {
               <Route path='/raise' component={RaiseQuestion} />
               <Route path='/my-questions' component={MyQuestions} />
               <Route path='/assign-questions' component={AssignQuestions} />
+              <Route path='/answer-page/:id' component={Answer} />
           </Switch>
         </div>
       </BrowserRouter>

@@ -16,10 +16,10 @@ const authReducer = (state = initialState, action) => {
   // return state
   // console.log('authReducer', action.type)
   switch (action.type) {
-  //   case 'USER_LOADED':
+  //   case 'USER_LOADED': 
   //     return {
   //       ...state,
-  //       user: action.payload,
+  //       user: action.payload, 
   //       isAuthenticated: true,
   //       loading: false,
   //     };
@@ -34,7 +34,8 @@ const authReducer = (state = initialState, action) => {
         loading: false,
       };
     case 'EMAIL_EXISTS':
-    case 'USER_EXISTS':
+    case 'USER_EXISTS': 
+    console.log('USER_EXISTS authReducer',)
       return {
         ...state,
         isAuthenticated: false,
@@ -43,18 +44,19 @@ const authReducer = (state = initialState, action) => {
   //   case 'REGISTER_FAIL':
   //   case 'AUTH_ERROR':
     case 'NO_ACCESS':
-      // console.log('NO_ACCESS authReducer')
+      console.log('NO_ACCESS authReducer')
       return {
         ...state,
   //       token: null,
         isAuthenticated: false,
-        loading: false,
+        loading: false, 
       };
     case 'LOGIN_FAILED':
+      console.log('LOGIN_FAILED authRed')
     case 'LOGOUT_SUCCESS':
-      // console.log('LOGOUT_SUCCESS authReducer', state)
+       console.log('LOGOUT_SUCCESS authReducer', state)
       return {
-        ...state,
+        ...state, 
   //       token: null,
         isAuthenticated: false,
         loading: false,

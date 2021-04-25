@@ -31,7 +31,7 @@ const questionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    stuname: {          //Student who raised the question
+    stuname: {          //Student who  raised the question
         type: String,
         required: true
     },
@@ -40,10 +40,10 @@ const questionSchema = new mongoose.Schema({
         required: true
     },
     solution: {
-        type: String
+        type: [ String ] 
     },
     comments: {
-        type: [ String ]
+        type: [ String ] 
     }
 })
 
