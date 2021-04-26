@@ -37,9 +37,10 @@ router.get('/:uname/assigned-questions',checkAuthenticated, async (req, res) => 
 router.get('/check-answer/:id',checkAuthenticated, async (req, res) => {
    
        const id=req.params.id;
-       let checkquestion=await questionModel.findOne({ _id: id });
+       let checkquestion=await questionModel.findOne({_id: id });
        console.log('CHECK ANSWER', checkquestion)
-       return res.status(200).json({type: 'CHECK_ANSWER', checkquestion: checkquestion})       
+       let checkanswer=await answerModel.find({quesid: id });
+       return res.status(200).json({type: 'CHECK_ANSWER', checkquestion: checkquestion,checkanswer: checkanswer})       
 
 })
 //My Questions page for Tutor and Student

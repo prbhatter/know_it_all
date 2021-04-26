@@ -34,7 +34,8 @@ const questionReducer = (state = initState, action) => {
         console.log('CHECK_ANSWER question reducer', action.payload);
       return{
         ...state,
-        checkquestion: action.payload
+        checkquestion: action.payload.checkquestion,
+        checkanswer: action.payload.checkanswer
       }
       case 'ANSWER_QUESTION':  
       //console.log('my questions question reducer', action.payload.myquestions);

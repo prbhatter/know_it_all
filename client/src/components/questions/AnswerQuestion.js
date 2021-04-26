@@ -16,10 +16,9 @@ class Answers extends React.Component  {
   state = {
     content: ''
   } 
-  componentWillMount() {
-    console.log('PROPS ANSWER',this.props)
-    this.props.checkAnswer(this.props.match.params.id)
-    console.log('PROPS SE',this.props.checkquestion.solution.length)
+ componentWillMount() {
+    console.log('PROPS ANSWER',this.props.checkanswer)
+    this.props.checkAnswer(this.props.match.params.id) 
   }
   handleChange = (e) => {
     console.log('answer ka props');
@@ -31,7 +30,7 @@ class Answers extends React.Component  {
     e.preventDefault();
     const id=this.props.match.params.id;
     //console.log('raiseQuestion.js', this.props) 
-    // console.log(this.props)
+    // console.log(this.props) 
     const answer = {content: this.state.content}
     // answer.push(id)
     answer.idd=id;
@@ -42,10 +41,11 @@ class Answers extends React.Component  {
   }
       
     render() {
+   // console.log('PROPS SE',this.props.checkquestion.solution.length)
       let alreadyanswers=[];
-      for(let i=this.props.checkquestion.solution.length-1;i>=0;i--)
+      for(let i=this.props.checkanswer.length-1;i>=0;i--)
       { 
-        alreadyanswers.push(this.props.checkquestion.solution[i])
+        alreadyanswers.push(this.props.checkanswer[i].content)
       }
       console.log('ANSWERS KIYA HUA', this.props)
       return (  
@@ -85,17 +85,18 @@ class Answers extends React.Component  {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    raiseAnswer: (answer) => dispatch(raiseAnswer(answer)),
-    checkAnswer: (id) => dispatch(checkAnswer(id))
+    checkAnswer: (id) => dispatch(checkAnswer(id)),
+    raiseAnswer: (answer) => dispatch(raiseAnswer(answer))
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log('ANSWER question', state.question )
+const mapStateToProps = (state) => { 
+  console.log('ANSWER question', state.question)
   return {
     user: state.auth.user,
     isAuthenticated: state.auth.isAuthenticated,
-    checkquestion: state.question.checkquestion 
+    checkquestion: state.question.checkquestion,
+    checkanswer: state.question.checkanswer 
   }
 }
 const Answer = withRouter(Answers);

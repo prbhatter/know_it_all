@@ -79,8 +79,8 @@ export const checkAnswer = (id) => async (dispatch, getState) => {
     const res = await axios.get(`/check-answer/${id}`);
      console.log('CHECKQUESTION questionActions',res.data.checkquestion)
     dispatch({ 
-      type: 'CHECK_ANSWER',
-      payload: res.data.checkquestion,
+      type: 'CHECK_ANSWER', 
+      payload: res.data,
     });  
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
