@@ -7,25 +7,41 @@
 // }
 
 const initState = {
-  questions: []
+  questions: [],
+  myquestions:[],
+  assignquestions:[],
+  checkquestion:{},
+  solution:[]
 }
 
 const questionReducer = (state = initState, action) => {
   // console.log('questionReducer type', action.type)
   // console.log('questionReducer state', state)
   switch (action.type) {
-    case 'RAISE_QUESTION':
+    case 'RAISE_QUESTION': 
       // console.log('raise question', action.payload);
       return {
         ...state,
         questions: [action.payload.question, ...state.questions]
       }
     case 'MY_QUESTIONS': 
-      console.log('my questions question reducer', action.question);
+      console.log('my questions question reducer', action.payload.myquestions);
       return {
         ...state,
-        myquestions: action.payload.myquestions,
+        myquestions: action.payload.myquestions
       }
+      case 'CHECK_ANSWER': 
+        console.log('CHECK_ANSWER question reducer', action.payload);
+      return{
+        ...state,
+        checkquestion: action.payload
+      }
+      case 'ANSWER_QUESTION':  
+      //console.log('my questions question reducer', action.payload.myquestions);
+      return {  
+        ...state,
+        solution: action.payload.solution
+      } 
       case 'ASSIGNED_QUESTIONS':
       // console.log('my questions', action.question);
       return {
@@ -33,10 +49,10 @@ const questionReducer = (state = initState, action) => {
         assignquestions: action.payload.assignquestions,
       }
     case 'RECENT_QUESTIONS':
-      // console.log('recent questions', action.payload)
+      // console.log('recent questions', action.payload) 
       return {
         ...state,
-        questions: [...action.payload.questions]
+        questions: action.payload.questions
       }
     default:
       // console.log('default questionReducer', state);

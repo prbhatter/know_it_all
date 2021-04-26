@@ -1,5 +1,43 @@
 import axios from 'axios';
- 
+
+/*export const raiseQuestion = (question) => {
+    return async(dispatch, getState) => {
+      // make async call to database
+      dispatch({ type: 'RAISE_QUESTION', question });
+    }
+}*/
+
+
+export const raiseAnswer = (answer) => async (dispatch, getState) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const uname = answer.uname
+   console.log('answer',answer.idd) 
+  try {
+    const res = await axios.post(`/answer-questions/${answer.idd}`, answer, config);
+     console.log('answer actions',res.data)
+    dispatch({
+      type: 'ANSWER_QUESTION',
+      payload: res.data, 
+    });
+  //   // dispatch(myQuestions());
+  //   // dispatch(recentQuestions());
+  //   // dispatch(setAlert(res.data.message, 'success'));
+
+  //   // dispatch(getPosts());
+  } catch (err) {
+  //   // dispatch(setAlert(err.response.data.message, 'danger'));
+
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }};
+
+
 export const raiseQuestion = (question) => async (dispatch, getState) => {
   const config = {
     headers: {
@@ -9,8 +47,8 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
   const uname = question.uname
   // console.log('raise',uname) 
   try {
-    const res = await axios.post(`${uname}/my-questions`, question, config);
-    // console.log(res.data)
+    const res = await axios.post(`/${uname}/my-questions`, question, config);
+     console.log('question actions',res.data)
     dispatch({
       type: 'RAISE_QUESTION',
       payload: res.data,
@@ -23,6 +61,30 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
 
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
+export const checkAnswer = (id) => async (dispatch, getState) => {
+  console.log('CHECK actions  ')
+  const config = {
+    headers: {
+      'Content-Type': 'application/json' , 
+    },
+  };
+  try {
+    const res = await axios.get(`/check-answer/${id}`);
+     console.log('CHECKQUESTION questionActions',res.data.checkquestion)
+    dispatch({ 
+      type: 'CHECK_ANSWER',
+      payload: res.data.checkquestion,
+    });  
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+    console.log(err)
     dispatch({
       type: 'QUESTION_ERROR',
       payload: {msg: err.response.statusText, status: err.response.status},

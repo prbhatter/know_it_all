@@ -25,7 +25,7 @@ class SignedInLinkss extends Component {
     return ( 
       <div>
         {/* { Navigate } */}
-      <ul className="right">
+      <ul className="right"> 
         <li><NavLink to='/raise'>New Question</NavLink></li>
         <li><NavLink to='/my-questions'>My Questions</NavLink></li>
         <li><NavLink to='/assign-questions'>Assigned Questions</NavLink></li>

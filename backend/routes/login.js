@@ -26,19 +26,23 @@ router.post('/login', checkNotAuthenticated ,passport.authenticate('signin', {
     await userModel.findOne({
         uname: req.body.uname
     }, async (err,doc) => {
-        // console.log('login.js')
+        console.log('login.js',doc) 
         try{
             if(doc) {
                 return res.status(200).json({type: 'LOGIN_SUCCESS', user: doc})
+            } else {
+                console.log('login failed login js')
+                return res.status(500).json({type: 'LOGIN_FAILED'})
             }
         } catch(err) {
+            console.log('login failed')
             return res.status(500).json({type: 'LOGIN_FAILED', err: err})
         }
     })
     // return res.status(200).json({type: 'LOGIN_SUCCESS'})
 })
 
-router.get('/login/failed', (req, res) => {
+router.get('/login/failed', (req, res) => { 
     console.log('/login/failed')
     return res.status(500).json({type: 'LOGIN_FAILED'})
 })
@@ -48,7 +52,7 @@ router.delete('/logout', (req, res) => {
     // const type = req.params.type
     req.logOut()    // logOut function by Passport
     req.session.destroy()
-    // console.log('logout')
+    console.log('logout')
     return res.status(200).json({type: 'LOGOUT_SUCCESS'})
 })
 

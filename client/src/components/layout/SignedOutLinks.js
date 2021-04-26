@@ -10,6 +10,6 @@ const SignedOutLinks = () => {
       </ul>
     </div>
   )
-}
+} 
 
 export default SignedOutLinks

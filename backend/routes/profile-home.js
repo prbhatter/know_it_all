@@ -4,6 +4,7 @@ const userModel = require('../models/user.models')
 const questionModel = require('../models/questions.models')
 const commentModel = require('../models/comments.models')
 const notificationModel = require('../models/notifications.models')
+const answerModel = require('../models/answer.models')
 const { checkAuthenticated, checkNotAuthenticated } = require('../config/auth')
 const flash = require('express-flash')
 
@@ -21,7 +22,7 @@ router.get('/recent-questions', async (req, res) => {
     // console.log('backend', questions)
     return res.status(200).json({type: 'RECENT_QUESTIONS', questions: questions})
 })
-router.get('/:uname/assigned-questions', checkAuthenticated, async (req, res) => {
+router.get('/:uname/assigned-questions',checkAuthenticated, async (req, res) => {
     const uname = req.params.uname
     console.log(uname)
     let user = await userModel.findOne({ uname: uname })
@@ -29,12 +30,21 @@ router.get('/:uname/assigned-questions', checkAuthenticated, async (req, res) =>
     for(i=user.merekodiyaquestions.length-1; i>=0; i--) {
         question = await questionModel.findOne({ _id: (user.merekodiyaquestions)[i] })
         console.log('profile home',question)
+        
         questions.push(question)
     }
     return res.status(200).json({type: 'ASSIGNED_QUESTIONS', assignquestions: questions})
 })
+router.get('/check-answer/:id',checkAuthenticated, async (req, res) => {
+   
+       const id=req.params.id;
+       let checkquestion=await questionModel.findOne({ _id: id });
+       console.log('CHECK ANSWER', checkquestion)
+       return res.status(200).json({type: 'CHECK_ANSWER', checkquestion: checkquestion})       
+
+})
 //My Questions page for Tutor and Student
-router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
+router.get('/:uname/my-questions',checkAuthenticated, async (req, res) => {
     
     const uname = req.params.uname
     console.log(uname)
@@ -49,7 +59,7 @@ router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
     for(i=user.meraquestions.length-1; i>=0; i--) {
        // console.log('BC',(user.meraquestions)[i])    
         question = await questionModel.findOne({ _id: ((user.meraquestions)[i]) })
-        
+         
 
         // comments = []
         // for(j=question.comments.length-1; j>=0; j--) {
@@ -62,10 +72,34 @@ router.get('/:uname/my-questions', checkAuthenticated, async (req, res) => {
     return res.status(200).json({type: 'MY_QUESTIONS', myquestions: questions})
 })
 
-router.post('/:uname/my-questions', checkAuthenticated, async (req, res) => {
+router.post('/answer-questions/:id', checkAuthenticated,async (req, res) =>
+{
+    const answer=req.body.content;
+    const quesid=req.params.id;
+    console.log('PROFILE HOME',answer);
+    let sol={
+         content : answer,
+         quesid : quesid
+    } 
+    let model = new answerModel(sol);
+    console.log('QUESTION ID',quesid);
+    await model.save()
+    await questionModel.updateOne( 
+        { _id: quesid },
+        { $addToSet: { solution: [answer] } }, 
+        { new: true })
+    await questionModel.updateOne({ _id: quesid }, {
+            isAnswered: true
+          }); 
+    return res.status(200).json({type: 'ANSWER_QUESTION', solution: sol})
+})
+
+  
+
+router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => 
+{
     
     const uname = req.params.uname
-   // console.log('uname profile home',uname)
     const content = req.body.content
     const subject = req.body.subject
     const isAnswered = false
@@ -101,7 +135,7 @@ router.post('/:uname/my-questions', checkAuthenticated, async (req, res) => {
         } else {
             question.tutname = 'None'
         }
-
+ 
     let model = new questionModel(question);
 
     await model.save()
@@ -158,15 +192,15 @@ router.post('/tutor/:uname/my-questions/:id', checkAuthenticated, async (req, re
     res.redirect(`/tutor/${uname}/my-questions`)
 })
 
-router.post('/:type/:uname/my-questions/:id/comment', checkAuthenticated, async (req, res) => {
+router.post('/:uname/my-questions/:id/comment', checkAuthenticated, async (req, res) => {
 
     const uname = req.params.uname
     const id = req.params.id
-    const comment = req.body.comment
+    const comment = req.body.comment 
     const creationTime = Math.floor(Date.now()/1000)
     const type = req.params.type
 
-    let newcomment = {
+    let newcomment = { 
         content: comment,
         creationTime: creationTime,
         uname: uname,

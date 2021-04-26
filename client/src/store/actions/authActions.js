@@ -31,6 +31,7 @@ export const register = (user) => async (dispatch) => {
     const res = await axios.post('/register', body, config);
     // console.log(res.data)
     if(res.data.type === 'USER_EXISTS' || res.data.type === 'EMAIL_EXISTS') {
+      console.log('user exists')
       dispatch({
         type: res.data.type,
       })
@@ -42,7 +43,7 @@ export const register = (user) => async (dispatch) => {
     }
 
   } catch (err) {
-    console.log(err)
+    console.log('error',err)
     dispatch({
       type: 'REGISTER_FAIL',
     });
@@ -63,16 +64,19 @@ export const login = ({uname, password}) => async (dispatch) => {
     const res = await axios.post('/login', body, config);
     // console.log('login authActions data recieved', res.data)
     if(res.data.type == 'NO_ACCESS') {
+      console.log('Login no acees')
       dispatch({
         type: 'NO_ACCESS',
         payload: res.data
       })
     } else if(res.data.type == 'ALREADY_LOGGEDIN') {
+      console.log('already loggend in')
       dispatch({
         type: 'ALREADY_LOGGEDIN',
         payload: res.data
       })
     } else {
+      console.log('login succes authactions')
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data,
@@ -84,7 +88,7 @@ export const login = ({uname, password}) => async (dispatch) => {
     // dispatch(loadUser());
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
-    console.log(err)
+    console.log('error',err)
     dispatch({
       type: 'LOGIN_FAILED',
     });
@@ -97,4 +101,4 @@ export const logout = () => async(dispatch) => {
   // console.log('logout authActions')
   const res = await axios.delete('/logout');
   dispatch({type: 'LOGOUT_SUCCESS'});
-};
+}; 

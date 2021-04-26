@@ -7,10 +7,6 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    creationTime: {
-        type: Number,
-        required: true
-    },
     uname: {
         type: String
     },

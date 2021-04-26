@@ -9,6 +9,7 @@ import rootReducer from './store/reducers/rootReducer'
 const persistConfig = {
   key: 'root',
   storage,
+
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer, applyMiddleware(thunk))
@@ -19,4 +20,4 @@ const configureStore = () => {
   return { store, persistor }
 }
 
-export default configureStore
+export default configureStore 

@@ -5,6 +5,7 @@ import { raiseQuestion } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router";
+import { myQuestions } from '../../store/actions/questionActions'
 
 class RaiseQuestions extends Component {
   state = {
@@ -27,7 +28,7 @@ class RaiseQuestions extends Component {
   onSelect2 = (selectedList, selectedItem) => {
     this.setState({
       visibility: selectedItem.option
-    })
+    }) 
   }
   onSelect3 = (selectedList, selectedItem) => {
     this.setState({
@@ -41,6 +42,7 @@ class RaiseQuestions extends Component {
     const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
     console.log('submit raise', question);
     this.props.raiseQuestion(question)
+    this.props.myQuestions(this.props.uname)
     this.setState({
       navigate: true
     })
@@ -73,7 +75,7 @@ class RaiseQuestions extends Component {
           <div className="input-field">
             <Multiselect
               id='subject'
-              options={subjectOptions} // Options to display in the dropdown
+              options={subjectOptions} // Options to display in the dropdown 
               displayValue="option" // Property name to display in the dropdown options
               placeholder="Question Subject"
               hidePlaceholder={true}
@@ -113,7 +115,8 @@ class RaiseQuestions extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    raiseQuestion: (question) => dispatch(raiseQuestion(question))
+    raiseQuestion: (question) => dispatch(raiseQuestion(question)),
+    myQuestions: (uname) => dispatch(myQuestions(uname))
   }
 }
 
@@ -121,7 +124,9 @@ const mapStateToProps = (state) => {
   // console.log('raise question', state.auth)
   return {
     user: state.auth.user,
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    myquestions: state.question.myquestions,
+    uname: state.auth.user.uname
   }
 }
 const RaiseQuestion = withRouter(RaiseQuestions);
