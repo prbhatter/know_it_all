@@ -13,15 +13,17 @@ class Dashboard extends Component {
   render() {
     // console.log('dashboard after logout', this.props)
     const { questions } = this.props
+    const notifications = (this.props.user)?<div className="col s12 m5 offset-m1">
+                                                    <Notifications/>
+                                                </div>
+                                                : null
     return (
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m6">
             <QuestionList questions={questions}/> 
           </div>
-          <div className="col s12 m5 offset-m1">
-            <Notifications />
-          </div>
+          { notifications }
         </div>
       </div>
     )
@@ -31,7 +33,8 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => {
   // console.log('dasboard map', state)
   return {
-    questions: state.question.questions
+    questions: state.question.questions,
+    user: state.auth.user
   }
 }
 

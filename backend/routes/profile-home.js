@@ -3,6 +3,7 @@ const passport = require('passport')
 const userModel = require('../models/user.models')
 const questionModel = require('../models/questions.models')
 const commentModel = require('../models/comments.models')
+const notificationModel = require('../models/notifications.models')
 const answerModel = require('../models/answer.models')
 const { checkAuthenticated, checkNotAuthenticated } = require('../config/auth')
 const flash = require('express-flash')
@@ -47,7 +48,7 @@ router.get('/check-answer/:id',checkAuthenticated, async (req, res) => {
 router.get('/:uname/my-questions',checkAuthenticated, async (req, res) => {
     
     const uname = req.params.uname
-    //console.log(uname)
+    console.log(uname)
     
     let user = await userModel.findOne({ uname: uname })
     // let questions = await questionModel.find({ stuname: uname }).sort({ creationTime: -1 })
@@ -108,8 +109,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
     const visibility = req.body.visibility
     const anonymous = req.body.anonymous
 
-    let question = 
-    {
+    let question = {
         content: content,
         subject: subject,
         isAnswered: isAnswered,
@@ -154,6 +154,31 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
             { $addToSet: { meraquestions: [ model._id ] } },
             { new: true })
     console.log('question model', model)
+
+    let notification = {
+        type: "RAISE_QUESTION",
+        creationTime: creationTime,
+        expirationTime: expirationTime,
+        stuname: question.stuname,
+        tutname: question.tutname,
+        subject: subject
+    }
+    let newNotificationModel = new notificationModel(notification)
+    await newNotificationModel.save();
+
+    console.log('newNotificationModel ', newNotificationModel)
+
+    const clients = req.clients;
+    console.log('profile home req.clients', clients)
+
+    let socket = clients[question.stuname]
+    if(socket){
+        socket.emit('notify', newNotificationModel);
+    }
+    socket = clients[question.tutname]
+    if(socket){
+        socket.emit('notify', newNotificationModel);
+    }
     return res.status(200).json({type: 'RAISE_QUESTION', question: model})
 })
 
@@ -188,6 +213,16 @@ router.post('/:uname/my-questions/:id/comment', checkAuthenticated, async (req, 
     await questionModel.updateOne({ _id: id }, { $addToSet: { comments: [ model._id ] } }, { new: true } )
 
     res.redirect(`/${type}/${uname}/my-questions`)
+})
+
+router.get('/:uname/my-notifications', checkAuthenticated, async (req, res) => {
+    
+    const uname = req.params.uname
+    console.log(uname)
+    
+    let notifications = await notificationModel.find({ $or: [ { stuname: uname }, { tutname: uname } ] })
+    console.log('mynotifications', notifications)
+    return res.status(200).json({type: 'MY_QUESTIONS', mynotifications: notifications})
 })
 
 module.exports = router

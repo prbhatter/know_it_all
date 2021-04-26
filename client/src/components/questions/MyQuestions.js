@@ -6,6 +6,7 @@ import { myQuestions } from '../../store/actions/questionActions'
 
 class MyQuestions extends React.Component {
   componentDidMount() {
+    console.log('MyQuestions', this.props.uname)
     this.props.myQuestions(this.props.uname)
   } 
   render() {

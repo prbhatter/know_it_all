@@ -1,10 +1,12 @@
 import authReducer from './authReducer'
 import questionReducer from './questionReducer'
+import notificationReducer from './notificationReducer'
 import { combineReducers } from 'redux'
 
 const appReducer = combineReducers({
     auth: authReducer,
-    question: questionReducer
+    question: questionReducer,
+    notification: notificationReducer
 });
 
 const rootReducer = (state, action) => {

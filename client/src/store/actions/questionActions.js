@@ -53,8 +53,8 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
       type: 'RAISE_QUESTION',
       payload: res.data,
     });
-    // dispatch(myQuestions());
-    // dispatch(recentQuestions());
+    dispatch(myQuestions(question.uname));
+    dispatch(recentQuestions());
     // dispatch(setAlert(res.data.message, 'success'));
 
     // dispatch(getPosts());
@@ -99,8 +99,8 @@ export const assignedQuestions = (uname) => async (dispatch, getState) => {
     },
   };
 
-  try { 
-    const res = await axios.get(`/${uname}/assigned-questions`);
+  try {
+    const res = await axios.get(`${uname}/assigned-questions`);
     // console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'ASSIGNED_QUESTIONS',
@@ -120,39 +120,6 @@ export const assignedQuestions = (uname) => async (dispatch, getState) => {
   }
 };
 
-
-
-
-// export const checkAnswer = (questionid) => async (dispatch, getState) => {
-//   const config = {
-//     headers: {
-//       'Content-Type': 'application/json' ,
-//     },
-//   };
-
-//   try {
-//     const res = await axios.get(`/${uname}/alreadyanswerquestions`);
-//     // console.log('myQuestions questionActions',res.data)
-//     dispatch({
-//       type: 'MY_QUESTIONS',
-//       payload: res.data,
-//     });
-
-//     // dispatch(setAlert(res.data.message, 'success'));
-
-//     // dispatch(getPosts());
-//   } catch (err) {
-//     // dispatch(setAlert(err.response.data.message, 'danger'));
-//     console.log(err)
-//     dispatch({
-//       type: 'QUESTION_ERROR',
-//       payload: {msg: err.response.statusText, status: err.response.status},
-//     });
-//   }
-// };
-
-
-
 export const myQuestions = (uname) => async (dispatch, getState) => {
   const config = {
     headers: {
@@ -161,7 +128,8 @@ export const myQuestions = (uname) => async (dispatch, getState) => {
   };
 
   try {
-    const res = await axios.get(`/${uname}/my-questions`);
+    console.log('quesAct uname : ', uname);
+    const res = await axios.get(`${uname}/my-questions`);
     // console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'MY_QUESTIONS',
@@ -190,7 +158,7 @@ export const recentQuestions = () => async (dispatch, getState) => {
 
   // console.log('recent questions')
   try {
-    const res = await axios.get('/recent-questions');
+    const res = await axios.get('recent-questions');
     // console.log('recent questions', res.data)
     dispatch({
       type: 'RECENT_QUESTIONS',
