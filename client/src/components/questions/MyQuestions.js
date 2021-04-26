@@ -6,6 +6,7 @@ import { myQuestions } from '../../store/actions/questionActions'
 
 class MyQuestions extends React.PureComponent {
   componentDidMount() {
+    console.log('MyQuestions', this.props.uname)
     this.props.myQuestions(this.props.uname)
   }
   render() {

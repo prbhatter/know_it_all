@@ -9,8 +9,42 @@ const passport = require('passport')
 const session = require('express-session')
 const methodOverride = require('method-override')
 
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+
 const { connectDb } = require('./config/connectDb')
 connectDb()
+
+const clients = {};
+
+io.on('connection', function(socket) {
+        console.log((new Date()) + ' Recieved a new connection');
+
+        // if (interval) {
+        //     clearInterval(interval);
+        // }
+        // interval = setInterval(() => getApiAndEmit(socket), 1000);
+
+        socket.emit('connection', null);
+
+        socket.on('message', function(message){
+
+            console.log('Recieved Message: ', message.type);
+            const { type, user } = message
+            // console.log('User: ', user);
+            // console.log('Type: ', type);
+            const uname = user.uname;
+            clients[uname] = socket;
+            console.log('connected: ' + user.uname + ' in ' + Object.getOwnPropertyNames(clients));
+
+        })
+
+        socket.on("disconnect", () => {
+            console.log("Client disconnected");
+            // clearInterval(interval);
+        });
+
+    });
 
 const initializePassport = require('./config/passport-config')      //To know how to initialize passport
 
@@ -41,9 +75,14 @@ const loginRoute = require('./routes/login')                        //Login rout
 app.use(loginRoute)
 
 const profileHomeRoute = require('./routes/profile-home')
+// Make wsServer accessible to our router
+app.use(function(req,res,next){
+    req.clients = clients;
+    next();
+});
 app.use(profileHomeRoute)
 
 const PORT = process.env.PORT
-app.listen( PORT, () => {                                           //Server started locally on PORT (currently 3000)
-    console.log(`Server started on PORT ${PORT}`)
+http.listen( PORT || 8000, () => {                                           //Server started locally on PORT (currently 3000)
+    console.log(`Server started on PORT ${PORT || 8000}`)
 })

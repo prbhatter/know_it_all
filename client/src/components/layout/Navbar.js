@@ -5,6 +5,17 @@ import SignedOutLinks from './SignedOutLinks'
 import {connect} from 'react-redux';
 
 class Navbar extends Component {
+
+  componentDidMount() {
+    // client.onopen = () => {
+    //   console.log('WebSocket Client Connected');
+    // };
+    // client.onmessage = (message) => {
+    //   const dataFromServer = JSON.parse(message.data);
+    //   console.log('got reply !', dataFromServer);
+    // }
+  }
+
   render() {
     const links = (this.props.isAuthenticated)?<SignedInLinks />:<SignedOutLinks />
     return (

@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const userModel = require('../models/user.models')
 const questionModel = require('../models/questions.models')
+const notificationModel = require('../models/notifications.models')
 const flash = require('express-flash')
 const { checkAuthenticated, checkNotAuthenticated } = require('../config/auth')
 
@@ -78,6 +79,10 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                         await questionModel.updateMany({
                             subject: sub, tutname: 'None'
                         }, { tutname: uname })
+                        
+                        await notificationModel.updateMany({
+                            subject: sub, tutname: 'None'
+                        }, { tutname: uname })
 
                         const questions = await questionModel.find({
                             subject: sub, tutname: uname
@@ -95,9 +100,11 @@ router.post('/register', checkNotAuthenticated, async (req,res) => {
                         user.merekodiyaquestions = ques
                     }
                 }
+
                 // console.log(user)
                 let model = new userModel(user);
                 await model.save()
+
                 return res.status(200).json({type: 'REGISTER_SUCCESS', user: model})                //Successful registration, redirect to respective login page
                 
             }

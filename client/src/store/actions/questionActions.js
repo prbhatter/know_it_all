@@ -1,11 +1,4 @@
 import axios from 'axios';
-
-/*export const raiseQuestion = (question) => {
-    return async(dispatch, getState) => {
-      // make async call to database
-      dispatch({ type: 'RAISE_QUESTION', question });
-    }
-}*/
  
 export const raiseQuestion = (question) => async (dispatch, getState) => {
   const config = {
@@ -16,13 +9,13 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
   const uname = question.uname
   // console.log('raise',uname) 
   try {
-    const res = await axios.post(`/${uname}/my-questions`, question, config);
+    const res = await axios.post(`${uname}/my-questions`, question, config);
     // console.log(res.data)
     dispatch({
       type: 'RAISE_QUESTION',
       payload: res.data,
     });
-    dispatch(myQuestions());
+    dispatch(myQuestions(question.uname));
     dispatch(recentQuestions());
     // dispatch(setAlert(res.data.message, 'success'));
 
@@ -45,7 +38,7 @@ export const assignedQuestions = (uname) => async (dispatch, getState) => {
   };
 
   try {
-    const res = await axios.get(`/${uname}/assigned-questions`);
+    const res = await axios.get(`${uname}/assigned-questions`);
     // console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'ASSIGNED_QUESTIONS',
@@ -65,11 +58,6 @@ export const assignedQuestions = (uname) => async (dispatch, getState) => {
   }
 };
 
-
-
-
-
-
 export const myQuestions = (uname) => async (dispatch, getState) => {
   const config = {
     headers: {
@@ -78,7 +66,8 @@ export const myQuestions = (uname) => async (dispatch, getState) => {
   };
 
   try {
-    const res = await axios.get(`/${uname}/my-questions`);
+    console.log('quesAct uname : ', uname);
+    const res = await axios.get(`${uname}/my-questions`);
     // console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'MY_QUESTIONS',
@@ -107,7 +96,7 @@ export const recentQuestions = () => async (dispatch, getState) => {
 
   // console.log('recent questions')
   try {
-    const res = await axios.get('/recent-questions');
+    const res = await axios.get('recent-questions');
     // console.log('recent questions', res.data)
     dispatch({
       type: 'RECENT_QUESTIONS',
