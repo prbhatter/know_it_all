@@ -13,7 +13,6 @@ const notificationSchema = new mongoose.Schema({
     },
     expirationTime: {   //Expiration time is 1 day after the creation of the question
         type: Number,
-        required: true
     },
     stuname: {          //Student who raised the question
         type: String,
@@ -24,6 +23,9 @@ const notificationSchema = new mongoose.Schema({
         required: true
     },
     subject: {
+        type: String
+    },
+    questionId: {
         type: String
     }
 })

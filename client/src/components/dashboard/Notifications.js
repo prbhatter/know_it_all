@@ -18,7 +18,6 @@ const socket = socketIOClient(ENDPOINT, connectionOptions);
 class Notifications extends Component {
 
   componentDidMount(){
-
     socket.on('connection', () => {
       socket.send({
         type: 'connected',
@@ -30,6 +29,10 @@ class Notifications extends Component {
       console.log('got notification from server !', notification);
       this.props.newNotification(notification)
     })
+
+    setInterval(() => {
+      socket.emit('check', this.props.user);
+    }, 2000);
 
     console.log('MyNotifications', this.props.user.uname)
     this.props.myNotifications(this.props.user.uname)

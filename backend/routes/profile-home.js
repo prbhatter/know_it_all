@@ -91,7 +91,34 @@ router.post('/answer-questions/:id', checkAuthenticated,async (req, res) =>
         { new: true })
     await questionModel.updateOne({ _id: quesid }, {
             isAnswered: true
-          }); 
+    });
+    let question = await questionModel.findOne({ _id: quesid });
+    console.log('question answered', question)
+    const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
+    let notification = {
+        type: "ANSWER_QUESTION",
+        creationTime: creationTime,
+        stuname: question.stuname,
+        tutname: question.tutname,
+        subject: question.subject,
+        questionId: question._id
+    }
+    let newNotificationModel = new notificationModel(notification)
+    await newNotificationModel.save();
+
+    console.log('newNotificationModel ', newNotificationModel)
+
+    const clients = req.clients;
+    console.log('profile home req.clients', clients)
+
+    let socket = clients[question.stuname]
+    if(socket){
+        socket.emit('notify', newNotificationModel);
+    }
+    socket = clients[question.tutname]
+    if(socket){
+        socket.emit('notify', newNotificationModel);
+    }
     return res.status(200).json({type: 'ANSWER_QUESTION', solution: sol})
 })
 
@@ -105,9 +132,10 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
     const subject = req.body.subject
     const isAnswered = false
     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-    const expirationTime = Math.floor(Date.now()/1000) + 86400              // 1 day = 86400 seconds
+    const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
     const visibility = req.body.visibility
     const anonymous = req.body.anonymous
+    const expired = 'false'
 
     let question = {
         content: content,
@@ -117,7 +145,8 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
         expirationTime: expirationTime,
         stuname: uname,
         visibility: visibility,
-        anonymous: anonymous
+        anonymous: anonymous,
+        expired: expired
     }
 
         let tut = await userModel.find({ subjects: subject })
@@ -139,7 +168,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
  
     let model = new questionModel(question);
 
-    await model.save()
+    question = await model.save()
 
     if(tut.length) {
         await userModel.updateOne(
@@ -161,7 +190,8 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
         expirationTime: expirationTime,
         stuname: question.stuname,
         tutname: question.tutname,
-        subject: subject
+        subject: subject,
+        questionId: question._id
     }
     let newNotificationModel = new notificationModel(notification)
     await newNotificationModel.save();
