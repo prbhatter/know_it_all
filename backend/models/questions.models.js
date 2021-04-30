@@ -44,6 +44,10 @@ const questionSchema = new mongoose.Schema({
     },
     comments: {
         type: [ String ] 
+    },
+    expired: {
+        type: String,
+        required: true
     }
 })
 

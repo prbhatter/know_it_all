@@ -56,7 +56,7 @@ class Answers extends React.Component  {
           <div className="container">
           <ol>
             {alreadyanswers.map((answer) => (
-              <li>{answer}</li>
+              <li key={answer._id}>{answer}</li>
             ))}
           </ol>
           </div>

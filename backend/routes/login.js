@@ -50,7 +50,12 @@ router.get('/login/failed', (req, res) => {
 //To Log Out of session
 router.delete('/logout', (req, res) => {
     // const type = req.params.type
+    // const uname = req.user.uname
+    // req.clients[uname] = null
+    // console.log('client ', req.clients[uname])
+
     req.logOut()    // logOut function by Passport
+    // console.log('logout req', req.user)
     req.session.destroy()
     console.log('logout')
     return res.status(200).json({type: 'LOGOUT_SUCCESS'})

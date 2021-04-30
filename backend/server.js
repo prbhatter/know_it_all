@@ -15,6 +15,9 @@ const io = require('socket.io')(http)
 const { connectDb } = require('./config/connectDb')
 connectDb()
 
+const questionModel = require('./models/questions.models');
+const notificationModel = require('./models/notifications.models');
+
 const clients = {};
 
 io.on('connection', function(socket) {
@@ -37,6 +40,41 @@ io.on('connection', function(socket) {
             clients[uname] = socket;
             console.log('connected: ' + user.uname + ' in ' + Object.getOwnPropertyNames(clients));
 
+        })
+
+        socket.on('check', async function(message){
+
+            // console.log('check event message')
+            const uname = message.uname
+            let expired_questions = await questionModel.find({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: 'false',  $or: [ { stuname: uname }, { tutname: uname } ] })
+            // console.log('expired questions ', expired_questions)
+            await questionModel.updateMany({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: 'false',  $or: [ { stuname: uname }, { tutname: uname } ] }, {expired: 'true'})
+            const creationTime = Math.floor(Date.now()/1000)
+            // console.log('time', creationTime)
+            let notifications = []
+            if(expired_questions){
+                notifications = expired_questions.map(question => {
+                    return ({
+                        type: 'EXPIRE_QUESTION',
+                        creationTime: creationTime,
+                        stuname: question.stuname,
+                        tutname: question.tutname,
+                        subject: question.subject,
+                        questionId: question._id
+                    })
+                })
+            }
+
+            notifications.forEach(async (notification) => {
+                let newNotificationModel = new notificationModel(notification)
+                await newNotificationModel.save();
+            
+                console.log('newNotificationModel ', newNotificationModel)
+
+                if(socket){
+                    socket.emit('notify', newNotificationModel);
+                }
+            });
         })
 
         socket.on("disconnect", () => {
@@ -68,6 +106,12 @@ app.get('/' , (req, res) => {                                       //GET reques
     res.render('index.ejs')
 })
 
+// Make wsServer accessible to our router
+app.use(function(req,res,next){
+    req.clients = clients;
+    next();
+});
+
 const registerRoute = require('./routes/register')                  //Register route
 app.use(registerRoute)
 
@@ -75,11 +119,6 @@ const loginRoute = require('./routes/login')                        //Login rout
 app.use(loginRoute)
 
 const profileHomeRoute = require('./routes/profile-home')
-// Make wsServer accessible to our router
-app.use(function(req,res,next){
-    req.clients = clients;
-    next();
-});
 app.use(profileHomeRoute)
 
 const PORT = process.env.PORT

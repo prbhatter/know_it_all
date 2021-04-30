@@ -10,7 +10,15 @@ class NotificationSummary extends Component{
         switch(type){
             case 'RAISE_QUESTION':
                 content = (user.type == 'Tutor') ? 'You have been assigned a ' + notification.subject + ' question.':'You have raised a ' + notification.subject + ' question.'
-
+                break;
+            case 'ANSWER_QUESTION':
+                content = (user.type == 'Tutor') ? 'You have answered a ' + notification.subject + ' question.':'Your ' + notification.subject + ' question is answered.'
+                break;
+            case 'EXPIRE_QUESTION':
+                content = (user.type == 'Tutor') ? 'Your ' + notification.subject + ' assigned question has expired.':'Your ' + notification.subject + ' question is expired.'
+                break;
+            default:
+                content = 'Notification!!!!'
         }
         const utc = notification.creationTime
         // const m = moment.unix(utc).utc().format('YYYY-MM-DD HH:mm:ss');
