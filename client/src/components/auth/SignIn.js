@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
     login: (user) => dispatch(login(user))
   }
 }
-
+ 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
