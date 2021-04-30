@@ -15,7 +15,7 @@ class MyQuestions extends React.Component {
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m6"> 
-            <QuestionList questions={myquestions} assignedquestionpage={false}/>
+            <QuestionList questions={myquestions} assignedquestionpage={false} />
           </div>
           <div className="col s12 m5 offset-m1">
             <Notifications /> 
@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
     myquestions: state.question.myquestions,
     uname: state.auth.user.uname
   }
-}
+} 
 
 const mapDispatchToProps = (dispatch) => {
   return {

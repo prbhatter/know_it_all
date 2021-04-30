@@ -35,6 +35,18 @@ router.get('/:uname/assigned-questions',checkAuthenticated, async (req, res) => 
     }
     return res.status(200).json({type: 'ASSIGNED_QUESTIONS', assignquestions: questions})
 })
+
+router.get('/comments/:id',checkAuthenticated, async (req, res) => {
+    console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+    const id = req.params.id
+    // console.log('QUES COMMENTS',id)
+    let comments = await commentModel.find({ questionId: id })
+    console.log('QUES COMMENTS',comments) 
+    return res.status(200).json({type: 'QUESTION_COMMENTS', questioncomments: comments})
+})
+
+
+
 router.get('/check-answer/:id',checkAuthenticated, async (req, res) => {
    
        const id=req.params.id;
@@ -93,6 +105,33 @@ router.post('/answer-questions/:id', checkAuthenticated,async (req, res) =>
             isAnswered: true
           }); 
     return res.status(200).json({type: 'ANSWER_QUESTION', solution: sol})
+})
+
+
+
+
+router.post('/:uname/:id/raisecomment', checkAuthenticated,async (req, res) =>
+{
+    const commentreceived=req.body.content;
+    const quesid=req.params.id;
+    const uname=req.params.uname;
+    console.log('PROFILE HOME COMMENT',commentreceived);
+    let comment={
+         uname: uname,
+         content : commentreceived, 
+         questionId : quesid
+    } 
+    let model = new commentModel(comment);
+    // console.log('CO ID',quesid);
+    await model.save()
+    await questionModel.updateOne( 
+        { _id: quesid },
+        { $addToSet: { comments: [model._id] } }, 
+        { new: true })
+    // await questionModel.updateOne({ _id: quesid }, {
+    //         isAnswered: true
+    //       }); 
+    return res.status(200).json({type: 'RAISE_COMMENT', comment: comment})
 })
 
   
@@ -166,10 +205,10 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
     let newNotificationModel = new notificationModel(notification)
     await newNotificationModel.save();
 
-    console.log('newNotificationModel ', newNotificationModel)
+    //console.log('newNotificationModel ', newNotificationModel)
 
     const clients = req.clients;
-    console.log('profile home req.clients', clients)
+   // console.log('profile home req.clients', clients)
 
     let socket = clients[question.stuname]
     if(socket){
@@ -221,7 +260,7 @@ router.get('/:uname/my-notifications', checkAuthenticated, async (req, res) => {
     console.log(uname)
     
     let notifications = await notificationModel.find({ $or: [ { stuname: uname }, { tutname: uname } ] })
-    console.log('mynotifications', notifications)
+    //console.log('mynotifications', notifications)
     return res.status(200).json({type: 'MY_QUESTIONS', mynotifications: notifications})
 })
 

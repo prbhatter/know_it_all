@@ -22,7 +22,7 @@ export const raiseAnswer = (answer) => async (dispatch, getState) => {
     dispatch({
       type: 'ANSWER_QUESTION',
       payload: res.data, 
-    });
+    }); 
   //   // dispatch(myQuestions());
   //   // dispatch(recentQuestions());
   //   // dispatch(setAlert(res.data.message, 'success'));
@@ -36,6 +36,32 @@ export const raiseAnswer = (answer) => async (dispatch, getState) => {
       payload: {msg: err.response.statusText, status: err.response.status},
     });
   }};
+
+export const checkComments= (quesid) => async (dispatch, getState) =>{
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const questionid=quesid;
+  console.log('QUES ACTIONS ID',questionid);
+  try {
+    const res = await axios.get(`/comments/${questionid}`, {questionid});
+     console.log('question actions',res.data)
+    dispatch({
+      type: 'QUESTION_COMMENTS',
+      payload: res.data,
+    });
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
 
 
 export const raiseQuestion = (question) => async (dispatch, getState) => {
@@ -67,6 +93,40 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
     });
   }
 };
+
+export const raiseComment = (comment) => async (dispatch, getState) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const uname = comment.uname 
+  // console.log('raise',uname) 
+  try {
+    const res = await axios.post(`/${uname}/${comment.quesid}/raisecomment`, comment, config);
+     console.log('question actions raise comment',res.data)
+    dispatch({
+      type: 'RAISE_COMMENT',
+      payload: res.data,
+    });
+    // dispatch(myQuestions(question.uname));
+    // dispatch(recentQuestions());
+    // dispatch(setAlert(res.data.message, 'success'));
+
+    // dispatch(getPosts());
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
+
+
+
 
 export const checkAnswer = (id) => async (dispatch, getState) => {
   console.log('CHECK actions  ')

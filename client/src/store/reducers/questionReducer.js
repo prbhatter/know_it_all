@@ -24,6 +24,18 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: [action.payload.question, ...state.questions]
       }
+      case 'RAISE_COMMENT': 
+       console.log('raise comment', action.payload);
+      return {
+        ...state,
+        //comments: [action.payload.question, ...state.questions]
+      }
+      case 'QUESTION_COMMENTS': 
+      console.log('question comments question reducer', action.payload.questioncomments);
+      return {
+        ...state,
+        questioncomments: action.payload.questioncomments
+      }  
     case 'MY_QUESTIONS': 
       console.log('my questions question reducer', action.payload.myquestions);
       return {
