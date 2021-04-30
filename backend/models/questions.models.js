@@ -46,8 +46,11 @@ const questionSchema = new mongoose.Schema({
         type: [ String ] 
     },
     expired: {
-        type: String,
+        type: Boolean,
         required: true
+    },
+    alltut: {
+        type: [ String ]
     }
 })
 

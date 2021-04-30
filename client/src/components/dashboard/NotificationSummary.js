@@ -2,6 +2,15 @@ import React, { Component } from 'react'
 
 class NotificationSummary extends Component{
 
+    handleOnClick = (type) => {
+        const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
+        console.log('submit raise', question);
+        this.props.raiseQuestion(question)
+        this.props.myQuestions(this.props.uname)
+        this.props.history.push("/my-questions")
+
+    }
+
     render(){
         const notification = this.props.notification
         const type = notification.type
@@ -15,7 +24,15 @@ class NotificationSummary extends Component{
                 content = (user.type == 'Tutor') ? 'You have answered a ' + notification.subject + ' question.':'Your ' + notification.subject + ' question is answered.'
                 break;
             case 'EXPIRE_QUESTION':
-                content = (user.type == 'Tutor') ? 'Your ' + notification.subject + ' assigned question has expired.':'Your ' + notification.subject + ' question is expired.'
+                content = (user.type == 'Tutor') ? <div>Your {notification.subject} assigned question is expired.</div>:
+                                                    <div>
+                                                        Your {notification.subject} question is expired.
+                                                        {/* <button onClick={() => this.handleOnClick('same')}>Reassign to same</button>
+                                                        <button onClick={() => this.handleOnClick('different')}>Reassign to different</button>
+                                                        <button onClick={() => this.handleOnClick('any')}>Reassign to any</button>
+                                                        <button onClick={() => this.handleOnClick('close')}>Close</button> */}
+                                                    </div>
+                
                 break;
             default:
                 content = 'Notification!!!!'
@@ -34,4 +51,21 @@ class NotificationSummary extends Component{
     }
 }
 
-export default NotificationSummary
+const mapDispatchToProps = (dispatch) => {
+  return {
+    raiseQuestion: (question) => dispatch(raiseQuestion(question)),
+    myQuestions: (uname) => dispatch(myQuestions(uname))
+  }
+}
+
+const mapStateToProps = (state) => {
+  // console.log('raise question', state.auth)
+  return {
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    myquestions: state.question.myquestions,
+    uname: state.auth.user.uname
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationSummary)

@@ -46,9 +46,9 @@ io.on('connection', function(socket) {
 
             // console.log('check event message')
             const uname = message.uname
-            let expired_questions = await questionModel.find({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: 'false',  $or: [ { stuname: uname }, { tutname: uname } ] })
+            let expired_questions = await questionModel.find({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: false,  $or: [ { stuname: uname }, { tutname: uname } ] })
             // console.log('expired questions ', expired_questions)
-            await questionModel.updateMany({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: 'false',  $or: [ { stuname: uname }, { tutname: uname } ] }, {expired: 'true'})
+            await questionModel.updateMany({expirationTime: {$lte: Math.floor(Date.now()/1000)}, expired: false,  $or: [ { stuname: uname }, { tutname: uname } ] }, {expired: true})
             const creationTime = Math.floor(Date.now()/1000)
             // console.log('time', creationTime)
             let notifications = []
