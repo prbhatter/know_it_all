@@ -21,7 +21,7 @@ class Dashboard extends Component {
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m6">
-            <QuestionList questions={questions}/> 
+            <QuestionList questions={questions} /> 
           </div>
           { notifications }
         </div>

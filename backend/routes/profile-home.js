@@ -36,8 +36,8 @@ router.get('/:uname/assigned-questions',checkAuthenticated, async (req, res) => 
     return res.status(200).json({type: 'ASSIGNED_QUESTIONS', assignquestions: questions})
 })
 
-router.get('/comments/:id',checkAuthenticated, async (req, res) => {
-    console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+router.get('/comments/:id', async (req, res) => {
+    //console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
     const id = req.params.id
     // console.log('QUES COMMENTS',id)
     let comments = await commentModel.find({ questionId: id })
@@ -45,7 +45,14 @@ router.get('/comments/:id',checkAuthenticated, async (req, res) => {
     return res.status(200).json({type: 'QUESTION_COMMENTS', questioncomments: comments})
 })
 
-
+router.get('/getquestion/:id', async (req, res) => {
+    console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+    const id = req.params.id
+    // console.log('QUES COMMENTS',id)
+    let getquestion = await questionModel.findOne({ _id: id })
+    console.log('GET QUES',getquestion) 
+    return res.status(200).json({type: 'GET_QUESTION', getquestion: getquestion})
+})
 
 router.get('/check-answer/:id',checkAuthenticated, async (req, res) => {
    
@@ -166,8 +173,6 @@ router.post('/:uname/:id/raisecomment', checkAuthenticated,async (req, res) =>
 router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => 
 {
     console.log('profile home my-questions', req)
-    const reassign = req.data.reassign
-    if(!reassign){
         const uname = req.params.uname
         const content = req.body.content
         const subject = req.body.subject
@@ -257,7 +262,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
         }
 
         return res.status(200).json({type: 'RAISE_QUESTION', question: model})
-    }
+    
     // } else if(reassign == 'same') {
 
     //     const uname = req.params.uname

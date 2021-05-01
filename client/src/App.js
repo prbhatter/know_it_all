@@ -28,6 +28,7 @@ class App extends Component {
               <Route path='/my-questions' component={MyQuestions} />
               <Route path='/assign-questions' component={AssignQuestions} />
               <Route path='/answer-page/:id' component={Answer} />
+              <Route path='/details-page/:id' component={QuestionDetails} />  
           </Switch>
         </div>
       </BrowserRouter>

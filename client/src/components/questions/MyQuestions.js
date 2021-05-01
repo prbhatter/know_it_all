@@ -13,9 +13,9 @@ class MyQuestions extends React.Component {
     const { myquestions } = this.props
     return (
       <div className="dashboard container">
-        <div className="row">
+        <div className="row"> 
           <div className="col s12 m6"> 
-            <QuestionList questions={myquestions} assignedquestionpage={false} />
+            <QuestionList questions={myquestions} assignedquestionpage={false} myquestionscheck={true} />
           </div>
           <div className="col s12 m5 offset-m1">
             <Notifications /> 

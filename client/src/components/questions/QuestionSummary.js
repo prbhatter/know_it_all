@@ -13,6 +13,9 @@ import { NavLink } from 'react-router-dom'
 //   <textarea></textarea>
 // }
 class QuestionSummary extends Component  {
+  componentDidMount(){
+    this.props.checkComments(this.props.question._id)
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +37,7 @@ class QuestionSummary extends Component  {
     this.props.raiseComment(comment) 
     // this.props.myQuestions(this.props.uname)
     this.setState(state => ({
-      visibility: !state.visibility 
+      visibility: !state.visibility  
     }));
     //this.props.history.push("/my-questions") 
   
@@ -46,26 +49,30 @@ class QuestionSummary extends Component  {
         visibility: !state.visibility
       }));
     }
-    handleChange = (e) => {
+    handleChange = (e) => { 
       console.log('QUES SUMMARY PROPS',this.props.isAuthenticated)
       this.setState({
         [e.target.id]: e.target.value
       }) 
     }
   render() {
+    //  this.props.checkComments(this.props.question._id)
     let previouscomments=[];
+    if(this.props.questioncomments){
       for(let i=this.props.questioncomments.length-1;i>=0;i--)
       { 
         previouscomments.push(this.props.questioncomments[i].content)
-      }
-    console.log('ques summary',this.props) 
+      }}
+    console.log('ques summary',this.props.meraquestionscheck) 
     const name = ( this.props.question.anonymous == 'Yes' ) ? 'Anonymous' : this.props.question.stuname
     const utc = this.props.question.creationTime
-    const quesid=this.props.question._id; 
+    const quesid=this.props.question._id;  
     console.log('QUESTION SUMMARY',quesid)
     // const m = moment.unix(utc).utc().format('YYYY-MM-DD HH:mm:ss');
     // console.log(m);
    const content= this.props.assignedquestionpage?<NavLink to={`/answer-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
+   const content1= this.props.myquestionscheck?<NavLink to={`/details-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
+   const finalcontent =this.props.assignedquestionpage?content:content1
    let button = (this.props.isAuthenticated)?<button onClick={this.handleClick}>Comment</button>:null
    let textArea=(this.state.visibility)?<form className="container" onSubmit={this.handleSubmit}>
       <div className="input-field">
@@ -73,7 +80,7 @@ class QuestionSummary extends Component  {
         <label htmlFor="content">Enter your comment</label>
       </div>
       <div className="input-field">
-        <button className="btn pink lighten-1">Comment</button>
+        <button className="btn pink lighten-1">Comment</button> 
       </div>
       </form>:null
     let quesComments=(this.state.visibility)?<div>
@@ -89,7 +96,7 @@ class QuestionSummary extends Component  {
   
     <div className="card z-depth-0 question-summary">
         <div className="card-content grey-text text-darken-3">
-          {content}
+          { finalcontent}
           <p>Posted by { name }</p> 
           <p className="grey-text">{ utc }</p>
           { button }

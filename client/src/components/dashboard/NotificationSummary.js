@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-
+import { connect } from 'react-redux'
+import { raiseQuestion } from '../../store/actions/questionActions'
+import { myQuestions } from '../../store/actions/questionActions'
 class NotificationSummary extends Component{
 
     handleOnClick = (type) => {

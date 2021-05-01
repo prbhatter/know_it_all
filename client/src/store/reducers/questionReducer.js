@@ -35,6 +35,12 @@ const questionReducer = (state = initState, action) => {
       return {
         ...state,
         questioncomments: action.payload.questioncomments
+      }
+      case 'GET_QUESTION': 
+      console.log('GET questions question reducer', action.payload.getquestion);
+      return {
+        ...state,
+        getquestion: action.payload.getquestion
       }  
     case 'MY_QUESTIONS': 
       console.log('my questions question reducer', action.payload.myquestions);

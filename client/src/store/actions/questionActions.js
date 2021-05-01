@@ -37,6 +37,32 @@ export const raiseAnswer = (answer) => async (dispatch, getState) => {
     });
   }};
 
+  export const getQuestion= (quesid) => async (dispatch, getState) =>{
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const questionid=quesid;
+    console.log('QUES ACTIONS ID',questionid);
+    try {
+      const res = await axios.get(`/getquestion/${questionid}`, {questionid}); 
+       console.log('question actions',res.data)
+      dispatch({ 
+        type: 'GET_QUESTION',
+        payload: res.data,
+      });
+    } catch (err) {
+      // dispatch(setAlert(err.response.data.message, 'danger'));
+  
+      dispatch({
+        type: 'QUESTION_ERROR',
+        payload: {msg: err.response.statusText, status: err.response.status},
+      });
+    }
+  };
+
+
 export const checkComments= (quesid) => async (dispatch, getState) =>{
   const config = {
     headers: {
@@ -44,10 +70,10 @@ export const checkComments= (quesid) => async (dispatch, getState) =>{
     },
   };
   const questionid=quesid;
-  console.log('QUES ACTIONS ID',questionid);
+  //console.log('QUES ACTIONS ID',questionid);
   try {
     const res = await axios.get(`/comments/${questionid}`, {questionid});
-     console.log('question actions',res.data)
+   //  console.log('question actions',res.data)
     dispatch({
       type: 'QUESTION_COMMENTS',
       payload: res.data,
@@ -71,7 +97,7 @@ export const raiseQuestion = (question) => async (dispatch, getState) => {
     },
   };
   const uname = question.uname
-  // console.log('raise',uname) 
+   console.log('raise',uname) 
   try {
     const res = await axios.post(`/${uname}/my-questions`, question, config);
      console.log('question actions',res.data)
