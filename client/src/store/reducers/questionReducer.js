@@ -17,6 +17,8 @@ const initState = {
 const questionReducer = (state = initState, action) => {
   // console.log('questionReducer type', action.type)
   // console.log('questionReducer state', state)
+  let stateQuestions = state.questions
+  
   switch (action.type) {
     case 'RAISE_QUESTION': 
       // console.log('raise question', action.payload);
@@ -24,19 +26,43 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: [action.payload.question, ...state.questions]
       }
-      case 'RAISE_COMMENT': 
+    case 'REASSIGN_QUESTION': 
+      console.log('reassign question', action.payload);
+      stateQuestions = state.questions
+      stateQuestions.forEach(question => {
+        if(question._id == action.payload.question._id){
+          question = action.payload.question
+        }
+      });
+      return {
+        ...state,
+        questions: stateQuestions
+      }
+    case 'REASSIGN_QUESTION': 
+        console.log('closed question', action.payload);
+        stateQuestions = state.questions
+        stateQuestions.forEach(question => {
+          if(question._id == action.payload.question._id){
+            question = action.payload.question
+          }
+        });
+        return {
+          ...state,
+          questions: stateQuestions
+        }
+    case 'RAISE_COMMENT': 
        console.log('raise comment', action.payload);
       return {
         ...state,
         //comments: [action.payload.question, ...state.questions]
       }
-      case 'QUESTION_COMMENTS': 
+    case 'QUESTION_COMMENTS': 
       console.log('question comments question reducer', action.payload.questioncomments);
       return {
         ...state,
         questioncomments: action.payload.questioncomments
       }
-      case 'GET_QUESTION': 
+    case 'GET_QUESTION': 
       console.log('GET questions question reducer', action.payload.getquestion);
       return {
         ...state,
@@ -48,20 +74,20 @@ const questionReducer = (state = initState, action) => {
         ...state,
         myquestions: action.payload.myquestions
       }
-      case 'CHECK_ANSWER': 
-        console.log('CHECK_ANSWER question reducer', action.payload);
+    case 'CHECK_ANSWER': 
+      console.log('CHECK_ANSWER question reducer', action.payload);
       return{
         ...state,
         checkquestion: action.payload.checkquestion,
         checkanswer: action.payload.checkanswer
       }
-      case 'ANSWER_QUESTION':  
+    case 'ANSWER_QUESTION':  
       //console.log('my questions question reducer', action.payload.myquestions);
       return {  
         ...state,
         solution: action.payload.solution
       } 
-      case 'ASSIGNED_QUESTIONS':
+    case 'ASSIGNED_QUESTIONS':
       // console.log('my questions', action.question);
       return {
         ...state,

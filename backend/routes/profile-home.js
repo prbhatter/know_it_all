@@ -108,9 +108,9 @@ router.post('/answer-questions/:id', checkAuthenticated,async (req, res) =>
         { _id: quesid },
         { $addToSet: { solution: [answer] } }, 
         { new: true })
-    await questionModel.updateOne({ _id: quesid }, {
-            isAnswered: true
-    });
+    // await questionModel.updateOne({ _id: quesid }, {
+    //         isAnswered: true
+    // });
     let question = await questionModel.findOne({ _id: quesid });
     console.log('question answered', question)
     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
@@ -170,9 +170,11 @@ router.post('/:uname/:id/raisecomment', checkAuthenticated,async (req, res) =>
 
   
 
-router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => 
-{
-    console.log('profile home my-questions', req)
+router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
+
+    const reassign = req.body.reassignType
+    console.log('reassign type', reassign)
+    if(!reassign){
         const uname = req.params.uname
         const content = req.body.content
         const subject = req.body.subject
@@ -234,7 +236,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
         console.log('question model', model)
 
         let notification = {
-            type: "RAISE_QUESTION",
+            type: 'RAISE_QUESTION',
             creationTime: creationTime,
             expirationTime: expirationTime,
             stuname: question.stuname,
@@ -263,217 +265,255 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) =>
 
         return res.status(200).json({type: 'RAISE_QUESTION', question: model})
     
-    // } else if(reassign == 'same') {
+    } else if(reassign == 'same') {
 
-    //     const uname = req.params.uname
-    //     const isAnswered = false
-    //     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-    //     const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
-    //     const expired = false
+        const uname = req.params.uname
+        const isAnswered = false
+        const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expired = false
 
-    //     const questionUpdate = {
-    //         isAnswered: isAnswered,
-    //         expirationTime: expirationTime,
-    //         expired: expired
-    //     }
-    //     const question = req.data
+        const questionUpdate = {
+            isAnswered: isAnswered,
+            expirationTime: expirationTime,
+            expired: expired
+        }
+        const question = req.body
+        console.log('question reassign same', question)
 
-    //     const newQuestion = await questionModel.findOneAndUpdate(
-    //         {_id: question._id},
-    //         questionUpdate
-    //     )
+        const newQuestion = await questionModel.findOneAndUpdate(
+            {_id: question._id},
+            questionUpdate
+        )
+        console.log('newQuestion', newQuestion);
+        let notification = {
+            type: 'REASSIGN_QUESTION',
+            creationTime: creationTime,
+            expirationTime: expirationTime,
+            stuname: newQuestion.stuname,
+            tutname: newQuestion.tutname,
+            subject: newQuestion.subject,
+            questionId: newQuestion._id
+        }
+        let newNotificationModel = new notificationModel(notification)
+        await newNotificationModel.save();
 
-    //     let notification = {
-    //         type: 'REASSIGN_QUESTION',
-    //         creationTime: creationTime,
-    //         expirationTime: expirationTime,
-    //         stuname: newQuestion.stuname,
-    //         tutname: newQuestion.tutname,
-    //         subject: newQuestion.subject,
-    //         questionId: newQuestion._id,
-    //         question: newQuestion
-    //     }
-    //     let newNotificationModel = new notificationModel(notification)
-    //     await newNotificationModel.save();
+        console.log('newNotificationModel ', newNotificationModel)
 
-    //     console.log('newNotificationModel ', newNotificationModel)
+        const clients = req.clients;
+        // console.log('profile home req.clients', clients)
 
-    //     const clients = req.clients;
-    //     // console.log('profile home req.clients', clients)
+        let socket = clients[question.stuname]
+        if(socket){
+            socket.emit('notify', newNotificationModel);
+        }
+        if(question.tutname != 'None') {
+            socket = clients[newQuestion.tutname]
+            if(socket){
+                socket.emit('notify', newNotificationModel);
+            }
+        }
+        return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion})
 
-    //     let socket = clients[question.stuname]
-    //     if(socket){
-    //         socket.emit('notify', newNotificationModel);
-    //     }
-    //     if(question.tutname != 'None') {
-    //         socket = clients[newQuestion.tutname]
-    //         if(socket){
-    //             socket.emit('notify', newNotificationModel);
-    //         }
-    //     }
-    //     return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion})
+    } else if(reassign == 'different') {
+        const uname = req.params.uname
+        const isAnswered = false
+        const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expired = false
+        const subject = req.body.subject
 
+        const question = req.body
+        console.log('question reassign different', question)
 
-    // } else if(reassign == 'different') {
-    //     const uname = req.params.uname
-    //     const isAnswered = false
-    //     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-    //     const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
-    //     const expired = false
+        const alltut = question.alltut
+        let tutname = 'None'
 
-    //     const question = req.data
+            let tut = await userModel.find({ subjects: subject })
+        console.log('profile home',tut)
+            let i,pos,flag=0;
+            if(tut.length) {
+                for(i=0; i<tut.length; i++) {
+                    if(tut[i].uname != uname && !alltut.includes(tut[i].uname)) {
+                        flag=1;
+                        break;
+                    }
+                }
 
-    //     const alltut = question.alltut
-    //     const tutname = 'None'
+                if(!flag){
+                    i=0;
+                }
+                let low = (tut[i].meraquestions).length
+                pos = i
+                tutname = tut[i].uname
+                for(++i; i<tut.length; i++) {
+                    if(tut[i].uname != uname && (tut[i].meraquestions).length < low && (!flag || !alltut.includes(tut[i].uname))) {
+                        low = (tut[i].meraquestions).length
+                        pos = i
+                        tutname = tut[i].uname
+                    }
+                }
+            }
 
-    //         let tut = await userModel.find({ subjects: subject })
-    //     // console.log('profile home',tut)
-    //         let i,pos,flag=0;
-    //         if(tut.length) {
-    //             for(i=0; i<tut.length; i++) {
-    //                 if(tut[i].uname != uname && !alltut.includes(tut[i].uname)) {
-    //                     flag=1;
-    //                     break;
-    //                 }
-    //             }
+            const newQuestion = await questionModel.findOneAndUpdate(
+                                    {_id: question._id},
+                                    {
+                                        isAnswered: isAnswered,
+                                        expirationTime: expirationTime,
+                                        expired: expired,
+                                        tutname: tutname,
+                                        $addToSet: { alltut: [ tutname ] }
+                                    }
+                                )
+            console.log('newQuestion', newQuestion);
 
-    //             if(!flag){
-    //                 i=0;
-    //             }
-    //             let low = (tut[i].meraquestions).length
-    //             pos = i
-    //             for(++i; i<tut.length; i++) {
-    //                 if(tut[i].uname != uname && (tut[i].meraquestions).length < low && (!flag || !alltut.includes(tut[i].uname))) {
-    //                     low = (tut[i].meraquestions).length
-    //                     pos = i
-    //                     tutname = tut[i].uname
-    //                 }
-    //             }
-    //         }
+        if(tut.length) {
+            await userModel.updateOne(
+                { uname: newQuestion.tutname },
+                { $addToSet: { merekodiyaquestions: [ newQuestion._id ] } },
+                { new: true })
+        }
 
-    //         const newQuestion = await questionModel.findOneAndUpdate(
-    //                                 {_id: question._id},
-    //                                 {
-    //                                     isAnswered: isAnswered,
-    //                                     expirationTime: expirationTime,
-    //                                     expired: expired,
-    //                                     tutname: tutname,
-    //                                     $addToSet: { alltut: [ tutname ] }
-    //                                 }
-    //                             )
+        let notification = {
+            type: 'REASSIGN_QUESTION',
+            creationTime: creationTime,
+            expirationTime: expirationTime,
+            stuname: newQuestion.stuname,
+            tutname: newQuestion.tutname,
+            subject: newQuestion.subject,
+            questionId: newQuestion._id
+        }
+        let newNotificationModel = new notificationModel(notification)
+        await newNotificationModel.save();
 
-    //     if(tut.length) {
-    //         await userModel.updateOne(
-    //             { uname: newQuestion.tutname },
-    //             { $addToSet: { merekodiyaquestions: [ newQuestion._id ] } },
-    //             { new: true })
-    //     }
+        console.log('newNotificationModel ', newNotificationModel)
 
-    //     let notification = {
-    //         type: 'REASSIGN_QUESTION',
-    //         creationTime: creationTime,
-    //         expirationTime: expirationTime,
-    //         stuname: newQuestion.stuname,
-    //         tutname: newQuestion.tutname,
-    //         subject: newQuestion.subject,
-    //         questionId: newQuestion._id
-    //     }
-    //     let newNotificationModel = new notificationModel(notification)
-    //     await newNotificationModel.save();
+        const clients = req.clients;
+        // console.log('profile home req.clients', clients)
 
-    //     console.log('newNotificationModel ', newNotificationModel)
+        let socket = clients[newQuestion.stuname]
+        if(socket){
+            socket.emit('notify', newNotificationModel);
+        }
+        if(tutname != 'None'){
+            socket = clients[newQuestion.tutname]
+            if(socket){
+                socket.emit('notify', newNotificationModel);
+            }
+        }
 
-    //     const clients = req.clients;
-    //     // console.log('profile home req.clients', clients)
+        return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion })
 
-    //     let socket = clients[newQuestion.stuname]
-    //     if(socket){
-    //         socket.emit('notify', newNotificationModel);
-    //     }
-    //     if(tutname != 'None'){
-    //         socket = clients[newQuestion.tutname]
-    //         if(socket){
-    //             socket.emit('notify', newNotificationModel);
-    //         }
-    //     }
+    } else if(reassign == 'any'){
+        const uname = req.params.uname
+        const isAnswered = false
+        const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expired = false
 
-    //     return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion })
+        const question = req.body
+        console.log('question reassign any', question)
 
-    // } else {
-    //     const uname = req.params.uname
-    //     const isAnswered = false
-    //     const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-    //     const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
-    //     const expired = false
+        let tutname = 'None'
 
-    //     const question = req.data
+            let tut = await userModel.find({ subjects: subject })
+        // console.log('profile home',tut)
+            let i,pos;
+            if(tut.length) {
+                let low = (tut[0].meraquestions).length
+                pos = 0
+                for(i=1; i<tut.length; i++) {
+                    if(tut[i].uname != uname && (tut[i].meraquestions).length < low) {
+                        low = (tut[i].meraquestions).length
+                        pos = i
+                        tutname = tut[i].uname
+                    }
+                }
+            }
 
-    //     const tutname = 'None'
+            const newQuestion = await questionModel.findOneAndUpdate(
+                                    {_id: question._id},
+                                    {
+                                        isAnswered: isAnswered,
+                                        expirationTime: expirationTime,
+                                        expired: expired,
+                                        tutname: tutname,
+                                        $addToSet: { alltut: [ tutname ] }
+                                    }
+                                )
+            console.log('newQuestion', newQuestion);
 
-    //         let tut = await userModel.find({ subjects: subject })
-    //     // console.log('profile home',tut)
-    //         let i,pos;
-    //         if(tut.length) {
-    //             let low = (tut[0].meraquestions).length
-    //             pos = 0
-    //             for(i=1; i<tut.length; i++) {
-    //                 if(tut[i].uname != uname && (tut[i].meraquestions).length < low) {
-    //                     low = (tut[i].meraquestions).length
-    //                     pos = i
-    //                     tutname = tut[i].uname
-    //                 }
-    //             }
-    //         }
+        if(tut.length) {
+            await userModel.updateOne(
+                { uname: newQuestion.tutname },
+                { $addToSet: { merekodiyaquestions: [ newQuestion._id ] } },
+                { new: true })
+        }
 
-    //         const newQuestion = await questionModel.findOneAndUpdate(
-    //                                 {_id: question._id},
-    //                                 {
-    //                                     isAnswered: isAnswered,
-    //                                     expirationTime: expirationTime,
-    //                                     expired: expired,
-    //                                     tutname: tutname,
-    //                                     $addToSet: { alltut: [ tutname ] }
-    //                                 }
-    //                             )
+        let notification = {
+            type: 'REASSIGN_QUESTION',
+            creationTime: creationTime,
+            expirationTime: expirationTime,
+            stuname: newQuestion.stuname,
+            tutname: newQuestion.tutname,
+            subject: newQuestion.subject,
+            questionId: newQuestion._id
+        }
+        let newNotificationModel = new notificationModel(notification)
+        await newNotificationModel.save();
 
-    //     if(tut.length) {
-    //         await userModel.updateOne(
-    //             { uname: newQuestion.tutname },
-    //             { $addToSet: { merekodiyaquestions: [ newQuestion._id ] } },
-    //             { new: true })
-    //     }
+        console.log('newNotificationModel ', newNotificationModel)
 
-    //     let notification = {
-    //         type: 'REASSIGN_QUESTION',
-    //         creationTime: creationTime,
-    //         expirationTime: expirationTime,
-    //         stuname: newQuestion.stuname,
-    //         tutname: newQuestion.tutname,
-    //         subject: newQuestion.subject,
-    //         questionId: newQuestion._id
-    //     }
-    //     let newNotificationModel = new notificationModel(notification)
-    //     await newNotificationModel.save();
+        const clients = req.clients;
+        // console.log('profile home req.clients', clients)
 
-    //     console.log('newNotificationModel ', newNotificationModel)
+        let socket = clients[newQuestion.stuname]
+        if(socket){
+            socket.emit('notify', newNotificationModel);
+        }
+        if(tutname != 'None'){
+            socket = clients[newQuestion.tutname]
+            if(socket){
+                socket.emit('notify', newNotificationModel);
+            }
+        }
 
-    //     const clients = req.clients;
-    //     // console.log('profile home req.clients', clients)
+        return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion })
 
-    //     let socket = clients[newQuestion.stuname]
-    //     if(socket){
-    //         socket.emit('notify', newNotificationModel);
-    //     }
-    //     if(tutname != 'None'){
-    //         socket = clients[newQuestion.tutname]
-    //         if(socket){
-    //             socket.emit('notify', newNotificationModel);
-    //         }
-    //     }
+    } else {
 
-    //     return res.status(200).json({type: 'REASSIGN_QUESTION', question: newQuestion })
-    // }
-    
+        const question = req.body
+        console.log('question close', question)
+
+        const newQuestion = await questionModel.findOneAndUpdate(
+            {_id: question._id},
+            { closed: true, tutname: 'None', isAnswered: true}
+        )
+        console.log('newQuestion', newQuestion);
+
+        let notification = {
+            type: 'CLOSED_QUESTION',
+            creationTime: creationTime,
+            expirationTime: expirationTime,
+            stuname: newQuestion.stuname,
+            tutname: newQuestion.tutname,
+            subject: newQuestion.subject,
+            questionId: newQuestion._id
+        }
+        let newNotificationModel = new notificationModel(notification)
+        await newNotificationModel.save();
+
+        console.log('newNotificationModel ', newNotificationModel)
+
+        const clients = req.clients;
+        // console.log('profile home req.clients', clients)
+
+        let socket = clients[question.stuname]
+        if(socket){
+            socket.emit('notify', newNotificationModel);
+        }
+        return res.status(200).json({type: 'CLOSED_QUESTION', question: newQuestion})
+    }
 })
 
 router.post('/tutor/:uname/my-questions/:id', checkAuthenticated, async (req, res) => {
