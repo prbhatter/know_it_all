@@ -51,6 +51,10 @@ const questionSchema = new mongoose.Schema({
     },
     alltut: {
         type: [ String ]
+    },
+    closed: {
+        type: Boolean,
+        default: false
     }
 })
 

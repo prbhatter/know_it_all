@@ -2,16 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { myQuestions } from '../../store/actions/questionActions'
+
 class NotificationSummary extends Component{
-
-    handleOnClick = (type) => {
-        const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
-        console.log('submit raise', question);
-        this.props.raiseQuestion(question)
-        this.props.myQuestions(this.props.uname)
-        this.props.history.push("/my-questions")
-
-    }
 
     render(){
         const notification = this.props.notification
@@ -27,14 +19,13 @@ class NotificationSummary extends Component{
                 break;
             case 'EXPIRE_QUESTION':
                 content = (user.type == 'Tutor') ? <div>Your {notification.subject} assigned question is expired.</div>:
-                                                    <div>
-                                                        Your {notification.subject} question is expired.
-                                                        {/* <button onClick={() => this.handleOnClick('same')}>Reassign to same</button>
-                                                        <button onClick={() => this.handleOnClick('different')}>Reassign to different</button>
-                                                        <button onClick={() => this.handleOnClick('any')}>Reassign to any</button>
-                                                        <button onClick={() => this.handleOnClick('close')}>Close</button> */}
-                                                    </div>
-                
+                                                    <div>Your {notification.subject} question is expired.</div>
+                break;
+            case 'REASSIGN_QUESTION':
+                content = (user.type == 'Tutor') ?  'You have been assigned a ' + notification.subject + ' question.':'You have reassigned a ' + notification.subject + ' question.'
+                break;
+            case 'CLOSED_QUESTION':
+                content = (user.type == 'Tutor') ?  null:'You have closed a ' + notification.subject + ' question.'
                 break;
             default:
                 content = 'Notification!!!!'

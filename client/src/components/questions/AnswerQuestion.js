@@ -43,9 +43,10 @@ class Answers extends React.Component  {
     render() {
    // console.log('PROPS SE',this.props.checkquestion.solution.length)
       let alreadyanswers=[];
-      for(let i=this.props.checkanswer.length-1;i>=0;i--)
-      { 
-        alreadyanswers.push(this.props.checkanswer[i].content)
+      if(this.props.checkanswer){
+        for(let i=this.props.checkanswer.length-1;i>=0;i--){ 
+          alreadyanswers.push(this.props.checkanswer[i].content)
+        }
       }
       console.log('ANSWERS KIYA HUA', this.props)
       return (  

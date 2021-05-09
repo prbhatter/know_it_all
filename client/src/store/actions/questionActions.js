@@ -88,21 +88,20 @@ export const checkComments= (quesid) => async (dispatch, getState) =>{
   }
 };
 
-
-
 export const raiseQuestion = (question) => async (dispatch, getState) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
+  console.log('raise question', question)
   const uname = question.uname
-   console.log('raise',uname) 
+  console.log('raise',uname)
   try {
     const res = await axios.post(`/${uname}/my-questions`, question, config);
-     console.log('question actions',res.data)
+    console.log('question actions',res.data)
     dispatch({
-      type: 'RAISE_QUESTION',
+      type: res.data.type,
       payload: res.data,
     });
     dispatch(myQuestions(question.uname));
