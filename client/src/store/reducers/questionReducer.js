@@ -11,7 +11,8 @@ const initState = {
   myquestions:[],
   assignquestions:[],
   checkquestion:{},
-  solution:[]
+  solution:[],
+  messages: []
 }
 
 const questionReducer = (state = initState, action) => {
@@ -28,7 +29,6 @@ const questionReducer = (state = initState, action) => {
       }
     case 'REASSIGN_QUESTION': 
       console.log('reassign question', action.payload);
-      stateQuestions = state.questions
       stateQuestions.forEach(question => {
         if(question._id == action.payload.question._id){
           question = action.payload.question
@@ -99,6 +99,16 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: action.payload.questions
       }
+    case 'SEND_MESSAGE':
+      return {
+        ...state,
+        messages: [...stateQuestions, action.payload.message]
+    }
+    case 'GET_MESSAGES':
+      return {
+        ...state,
+        messages: action.payload.messages
+    }
     default:
       // console.log('default questionReducer', state);
       return state

@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router";
 import { checkAnswer } from '../../store/actions/questionActions'
+import ChatBox from '../chat/ChatBox'
+
 // componentDidMount() {
 //   this.props.checkAnswer(this.props.match.params.id)
 // }
@@ -49,38 +51,44 @@ class Answers extends React.Component  {
         }
       }
       console.log('ANSWERS KIYA HUA', this.props)
+      const question = this.props.checkquestion
+      let chatBox = (question && question.tutname != 'None')?<ChatBox question = {question} />:null
+
       return (  
         <div className="container">
             
           { this.props.checkquestion.isAnswered?
-        <div>
-          <div className="container">
-          <ol>
-            {alreadyanswers.map((answer) => (
-              <li key={answer._id}>{answer}</li>
-            ))}
-          </ol>
+          <div>
+            <div className="container">
+            <ol>
+              {alreadyanswers.map((answer) => (
+                <li key={answer._id}>{answer}</li>
+              ))}
+            </ol>
+            </div>
+          <form className="container" onSubmit={this.handleSubmit}>
+          <div className="input-field">
+              <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+              <label htmlFor="content">Enter your Answer</label>
           </div>
-        <form className="container" onSubmit={this.handleSubmit}>
-        <div className="input-field">
-            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
-            <label htmlFor="content">Enter your Answer</label>
-        </div>
-        <div className="input-field">
-            <button className="btn pink lighten-1">Raise</button>
+          <div className="input-field">
+              <button className="btn pink lighten-1">Raise</button>
+            </div>
+          </form>
           </div>
-        </form>
-        </div>
-        :
-        <form className="container" onSubmit={this.handleSubmit}>
-        <div className="input-field">
-            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
-            <label htmlFor="content">Badhwa Answer</label>
-        </div>
-        <div className="input-field">
-            <button className="btn pink lighten-1">Raise</button>
+          :
+          <form className="container" onSubmit={this.handleSubmit}>
+          <div className="input-field">
+              <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
+              <label htmlFor="content">Badhwa Answer</label>
           </div>
-        </form>}
+          <div className="input-field">
+              <button className="btn pink lighten-1">Raise</button>
+            </div>
+          </form>}
+          <div>
+            { chatBox }
+          </div>
         </div>
         )}
 }

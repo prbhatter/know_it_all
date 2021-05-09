@@ -2,11 +2,14 @@ const router = require('express').Router()
 const passport = require('passport')
 const userModel = require('../models/user.models')
 const questionModel = require('../models/questions.models')
+const messageModel = require('../models/messages.models')
 const commentModel = require('../models/comments.models')
 const notificationModel = require('../models/notifications.models')
 const answerModel = require('../models/answer.models')
 const { checkAuthenticated, checkNotAuthenticated } = require('../config/auth')
 const flash = require('express-flash')
+const messagesModels = require('../models/messages.models')
+const { findById } = require('../models/user.models')
 
 router.use(flash())
 
@@ -180,7 +183,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const subject = req.body.subject
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
         const visibility = req.body.visibility
         const anonymous = req.body.anonymous
         const expired = false
@@ -490,11 +493,11 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
             { closed: true, tutname: 'None', isAnswered: true}
         )
         console.log('newQuestion', newQuestion);
+        const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
 
         let notification = {
             type: 'CLOSED_QUESTION',
             creationTime: creationTime,
-            expirationTime: expirationTime,
             stuname: newQuestion.stuname,
             tutname: newQuestion.tutname,
             subject: newQuestion.subject,
@@ -557,6 +560,56 @@ router.get('/:uname/my-notifications', checkAuthenticated, async (req, res) => {
     let notifications = await notificationModel.find({ $or: [ { stuname: uname }, { tutname: uname } ] })
     //console.log('mynotifications', notifications)
     return res.status(200).json({type: 'MY_QUESTIONS', mynotifications: notifications})
+})
+
+router.get('/get-messages/:id', async (req, res) => {
+    const quesid = req.params.id
+    console.log('get messages profile home', quesid)
+    const question = await questionModel.findOne({_id: quesid})
+    const messages = await messageModel.find({ stuname: question.stuname, tutname: question.tutname, quesId: question._id })
+    console.log('GET MESSAGES', messages)
+    return res.status(200).json({type: 'GET_MESSAGES', messages: messages})
+})
+
+router.post('/send-message', async (req, res) => {
+    console.log('send message', req.body)
+    const question = req.body.question
+    const content = req.body.content
+    const user = req.body.user
+    const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
+
+    let message = {
+        content: content,
+        creationTime: creationTime,
+        stuname: question.stuname,
+        tutname: question.tutname,
+        quesId: question._id
+    }
+    let newMessageModel = new messageModel(message)
+    await newMessageModel.save()
+
+    let notification = {
+        type: 'NEW_NOTIFICATION',
+        creationTime: creationTime,
+        stuname: question.stuname,
+        tutname: question.tutname,
+        subject: question.subject,
+        questionId: question._id
+    }
+    let newNotificationModel = new notificationModel(notification)
+    await newNotificationModel.save();
+
+    const clients = req.clients;
+    // console.log('profile home req.clients', clients)
+
+    const notificationReciever = (user.uname == question.tutname)?question.stuname:question.tutname
+    let socket = clients[notificationReciever]
+    if(socket){
+        socket.emit('notify', newNotificationModel);
+    }
+
+    console.log('SEND MESSAGE', newMessageModel)
+    return res.status(200).json({type: 'SEND_MESSAGE', message: newMessageModel})
 })
 
 module.exports = router

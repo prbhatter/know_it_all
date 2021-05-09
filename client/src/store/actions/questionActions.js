@@ -149,10 +149,6 @@ export const raiseComment = (comment) => async (dispatch, getState) => {
   }
 };
 
-
-
-
-
 export const checkAnswer = (id) => async (dispatch, getState) => {
   console.log('CHECK actions  ')
   const config = {
@@ -253,6 +249,58 @@ export const recentQuestions = () => async (dispatch, getState) => {
     // dispatch(setAlert(res.data.message, 'success'));
 
     // dispatch(getPosts());
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
+export const sendMessage = (question, content, user) => async (dispatch, getState) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  console.log('send message', question)
+  try {
+    const res = await axios.post(`/send-message`, {question, content, user}, config);
+    console.log('question actions send message', res.data)
+    dispatch({
+      type: 'SEND_MESSAGE',
+      payload: res.data,
+    });
+    dispatch(getMessages(question));
+    // dispatch(setAlert(res.data.message, 'success'));
+
+  } catch (err) {
+    // dispatch(setAlert(err.response.data.message, 'danger'));
+
+    dispatch({
+      type: 'QUESTION_ERROR',
+      payload: {msg: err.response.statusText, status: err.response.status},
+    });
+  }
+};
+
+export const getMessages = (question) => async (dispatch, getState) =>{
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  console.log('get messages', question);
+  const quesid = question._id
+  try {
+    const res = await axios.get(`/get-messages/${quesid}`);
+    console.log('get messages', res.data)
+    dispatch({ 
+      type: 'GET_MESSAGES',
+      payload: res.data,
+    });
   } catch (err) {
     // dispatch(setAlert(err.response.data.message, 'danger'));
 

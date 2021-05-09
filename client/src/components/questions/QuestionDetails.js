@@ -5,6 +5,7 @@ import { checkComments } from '../../store/actions/questionActions'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { myQuestions } from '../../store/actions/questionActions'
+import ChatBox from '../chat/ChatBox'
 
 class QuestionDetails extends Component  {
   componentWillMount() {
@@ -51,6 +52,8 @@ class QuestionDetails extends Component  {
                                             <button onClick={() => this.handleOnClick('close')}>Question is Answered</button>
                                           </div>
                                           : null
+    let chatBox = (question && question.tutname != 'None')?<ChatBox question = {question} />:null
+
     return (
       <div className="container section question-details">
         <div className="card z-depth-0">
@@ -64,8 +67,13 @@ class QuestionDetails extends Component  {
             <div>Posted by {question && question.stuname}</div>
             <div>{question.creationTime}</div>
           </div>
-          { reassignButtons }
-          { isAnsweredButton }
+          <div>
+            { reassignButtons }
+            { isAnsweredButton }
+          </div>
+        </div>
+        <div>
+          { chatBox }
         </div>
       </div>
     )

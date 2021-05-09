@@ -62,6 +62,7 @@ class RaiseQuestions extends Component {
                                                                     displayValue="option" // Property name to display in the dropdown options
                                                                     placeholder="Anonymity"
                                                                     hidePlaceholder={true}
+                                                                    singleSelect={true}
                                                                     onSelect={this.onSelect3}
                                                                     onRemove={this.onSelect3}
                                                                   />
