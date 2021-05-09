@@ -36,7 +36,7 @@ class Answers extends React.Component  {
     answer.idd=id;
     console.log('submit answer', answer);
     this.props.raiseAnswer(answer,id)
-    this.props.history.push("/assign-questions")
+    window.open("/assign-questions","_self")
 
   }
       

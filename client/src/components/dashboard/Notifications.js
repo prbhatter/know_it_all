@@ -51,10 +51,6 @@ class Notifications extends Component {
             <span className="card-title">Notifications</span>
             
             <ul className="notifications">
-              <li>Notification</li>
-              <li>Notification</li>
-              <li>Notification</li>
-              <li>Notification</li>
               { notifications && notifications.map(notification => {
                 console.log(notification)
                 if(notification != null && notification._id != null) {

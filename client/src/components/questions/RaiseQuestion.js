@@ -5,6 +5,7 @@ import { raiseQuestion } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router";
+import Navbar from '../layout/Navbar'
 import { myQuestions } from '../../store/actions/questionActions'
 
 class RaiseQuestions extends Component {
@@ -46,7 +47,7 @@ class RaiseQuestions extends Component {
     this.setState({
       navigate: true
     })
-    this.props.history.push("/my-questions")
+    window.open("/my-questions","_self")
 
   }
   render() {
@@ -55,7 +56,7 @@ class RaiseQuestions extends Component {
     let visibilityOptions = [{option: 'Private'}, {option: 'Public'}]
     let anonymousOptions = [{option: 'Yes'}, {option: 'No'}]
 
-    const anonymousDropdown =  (this.state.visibility === 'Public') &&  <div className="input-field">
+    const anonymousDropdown =  (this.state.visibility === 'Public') &&  <div style={{marginTop:30}}className="input-field">
                                                                     <Multiselect
                                                                     id='anonymous'
                                                                      options={anonymousOptions} // Options to display in the dropdown
@@ -69,10 +70,11 @@ class RaiseQuestions extends Component {
 
     return (
       <div className="container">
+        <Navbar />
         {/* { Navigate } */}
         <form className="white" onSubmit={this.handleSubmit}>
-          <h5 className="grey-text text-darken-3">Raise a New Question</h5>
-          <div className="input-field">
+          <h1 className="grey-text text-darken-3" id="raise">Raise a New Question</h1>
+          <div  style={{marginTop:30}} className="input-field">
             <Multiselect
               id='subject'
               options={subjectOptions} // Options to display in the dropdown 
@@ -84,7 +86,7 @@ class RaiseQuestions extends Component {
               onRemove={this.onSelect}
             />
           </div>
-          <div className="input-field">
+          <div style={{marginTop:30}} className="input-field">
             <Multiselect
               id='visibility'
               options={visibilityOptions} // Options to display in the dropdown
@@ -99,12 +101,12 @@ class RaiseQuestions extends Component {
           
           { anonymousDropdown }
 
-          <div className="input-field">
+          <div style={{marginTop:30}} className="input-field">
             <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
             <label htmlFor="content">Question Content</label>
           </div>
           <div className="input-field">
-            <button className="btn pink lighten-1">Raise</button>
+            <button style={{fontSize: 19,marginTop:50,paddingTop:7,paddingRight:57,paddingBottom:7,paddingLeft:57}} className="btn pink lighten-1">Raise</button>
           </div>
         </form>
           {/* { Navigate } */}

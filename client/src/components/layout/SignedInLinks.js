@@ -10,29 +10,45 @@ class SignedInLinkss extends Component {
     navigate: false
   }
 
-  handleOnClick = (e) => {
+  handleOnClick =  (e) => {
     e.preventDefault();
     // console.log('logout button', this.props)
     this.props.logout()
-    this.setState({
-      navigate: true
-    })
-     this.props.history.push('/')
+    this.props.history.push('/dashboard')
+   // window.open("/dashboard","_self") 
   }
 
   render (){
     // const Navigate = (this.state.navigate == true) && <Redirect to='/' />
     return ( 
-      <div>
+      <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
+        <div className="container">
         {/* { Navigate } */}
-      <ul className="right"> 
-        <li><NavLink to='/raise'>New Question</NavLink></li>
-        <li><NavLink to='/my-questions'>My Questions</NavLink></li>
-        <li><NavLink to='/assign-questions'>Assigned Questions</NavLink></li>
-        <li><button onClick={this.handleOnClick}>Log Out</button></li>
-        <li><NavLink to='/' className="btn btn-floating pink lighten-1">PB</NavLink></li>
-      </ul>
-      </div>
+        <div class="collapse navbar-collapse">
+                      
+                      <div class="navbar-header">
+                      <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                          <span class="icon icon-bar"></span>
+                          <span class="icon icon-bar"></span>
+                          <span class="icon icon-bar"></span> 
+                      </button>
+                      <a href="/" class="navbar-brand">Know_It_All</a>
+                      </div>
+                      <div class="collapse navbar-collapse">
+                      <ul class="nav navbar-nav navbar-nav-first">
+                          <li><a href="/raise" class="smoothScroll">New Question</a></li>
+                          <li><a href="/my-questions" class="smoothScroll">My Questions</a></li>    
+                          <li><a href="/assign-questions" class="smoothScroll">Assigned Questions</a></li>
+                          
+                      </ul>
+                      <ul class="nav navbar-nav navbar-right">
+                        
+                      <li style={{marginRight:50}}><a onClick={this.handleOnClick} class="smoothScroll">Log Out</a></li> 
+                      <li><a href="/" class="navbar-brand">PB</a></li>
+                      </ul>
+                      </div>
+                </div>
+        </div></section>
     )
     
   }

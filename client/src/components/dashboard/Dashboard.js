@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import QuestionList from '../questions/QuestionList'
+import Navbar from '../layout/Navbar'
 import Notifications from './Notifications'
 import { connect } from 'react-redux'
 import { recentQuestions } from '../../store/actions/questionActions'
@@ -18,6 +19,8 @@ class Dashboard extends Component {
                                                 </div>
                                                 : null
     return (
+      <div>
+        <Navbar />
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m6">
@@ -25,6 +28,7 @@ class Dashboard extends Component {
           </div>
           { notifications }
         </div>
+      </div>
       </div>
     )
   }
