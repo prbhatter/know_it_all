@@ -65,7 +65,7 @@ class SignUp extends Component {
                                                                   />
                                                                 </div>
     
-    const redir = this.props.isAuthenticated == true && <Redirect to='/' />
+    const redir = this.props.isAuthenticated == true && <Redirect to='/dashboard' />
     // console.log(this.state)
     
     return (
@@ -84,7 +84,7 @@ class SignUp extends Component {
             <input type="text" id="lastName" onChange={this.handleChange} />
           </div>
           
-          <div className="input-field">
+          <div className="input-field"> 
             <label htmlFor="uname">Username</label>
             <input type="text" id="uname" onChange={this.handleChange}  required={true}/>
           </div>
@@ -117,7 +117,7 @@ class SignUp extends Component {
           
           <div className="input-field">
             <label htmlFor="contact">Contact No.</label>
-            <input type="tel" id='contact' onChange={this.handleChange} />
+            <input type="tel" id='contact1' onChange={this.handleChange} />
           </div>
           
           <div className="input-field">

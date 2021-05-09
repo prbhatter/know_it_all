@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 import { raiseComment } from '../../store/actions/questionActions'
 import { checkComments } from '../../store/actions/questionActions'
 import { NavLink } from 'react-router-dom'
+import './question.css'
+import Navbar from '../layout/Navbar'
 // import { moment } from 'moment'
 
 // function handleClick() {
@@ -13,7 +15,7 @@ import { NavLink } from 'react-router-dom'
 //   <textarea></textarea>
 // }
 class QuestionSummary extends Component  {
-  componentDidMount(){
+  componentDidMount(){ 
     this.props.checkComments(this.props.question._id)
   }
   constructor(props) {
@@ -39,6 +41,7 @@ class QuestionSummary extends Component  {
     this.setState(state => ({
       visibility: !state.visibility  
     }));
+    // window.open("/assign-questions","_self")
     //this.props.history.push("/my-questions") 
   
   }
@@ -63,7 +66,7 @@ class QuestionSummary extends Component  {
       { 
         previouscomments.push(this.props.questioncomments[i].content)
       }}
-    console.log('ques summary',this.props.meraquestionscheck) 
+    console.log('ques summary',this.props.meraquestionscheck)  
     const name = ( this.props.question.anonymous == 'Yes' ) ? 'Anonymous' : this.props.question.stuname
     const utc = this.props.question.creationTime
     const quesid=this.props.question._id;  
@@ -73,14 +76,14 @@ class QuestionSummary extends Component  {
    const content= this.props.assignedquestionpage?<NavLink to={`/answer-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
    const content1= this.props.myquestionscheck?<NavLink to={`/details-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
    const finalcontent =this.props.assignedquestionpage?content:content1
-   let button = (this.props.isAuthenticated)?<button onClick={this.handleClick}>Comment</button>:null
+   let button = (this.props.isAuthenticated)?<button class="btn pink lighten-1" id="bt" onClick={this.handleClick}>Comment</button>:null
    let textArea=(this.state.visibility)?<form className="container" onSubmit={this.handleSubmit}>
       <div className="input-field">
         <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
         <label htmlFor="content">Enter your comment</label>
       </div>
       <div className="input-field">
-        <button className="btn pink lighten-1">Comment</button> 
+        <button className="btn pink lighten-1" id="bt">Comment</button> 
       </div>
       </form>:null
     let quesComments=(this.state.visibility)?<div>
@@ -91,11 +94,11 @@ class QuestionSummary extends Component  {
             ))}
           </ol>
           </div>
-    </div>:null  
+    </div>:null   
    return (
   
     <div className="card z-depth-0 question-summary">
-        <div className="card-content grey-text text-darken-3">
+        <div className="card-content grey-text text-darken-3" id="questioncard">
           { finalcontent}
           <p>Posted by { name }</p> 
           <p className="grey-text">{ utc }</p>

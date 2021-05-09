@@ -6,6 +6,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { myQuestions } from '../../store/actions/questionActions'
 import ChatBox from '../chat/ChatBox'
+import Navbar from '../layout/Navbar'
 
 class QuestionDetails extends Component  {
   componentWillMount() {
@@ -39,7 +40,7 @@ class QuestionDetails extends Component  {
                         </ol>
                       </div>
                     </div>
-    let reassignButtons = (question.expired && !question.closed)?
+    let reassignButtons = (question && question.expired && !question.closed)?
                                                 <div>
                                                   <button onClick={() => this.handleOnClick('same')}>Reassign to same</button>
                                                   <button onClick={() => this.handleOnClick('different')}>Reassign to different</button>
@@ -47,7 +48,7 @@ class QuestionDetails extends Component  {
                                                   <button onClick={() => this.handleOnClick('close')}>Close</button>
                                                 </div>
                                                 : null
-    let isAnsweredButton = (!question.isAnswered)?
+    let isAnsweredButton = (question && !question.isAnswered)?
                                           <div>
                                             <button onClick={() => this.handleOnClick('close')}>Question is Answered</button>
                                           </div>
@@ -55,17 +56,19 @@ class QuestionDetails extends Component  {
     let chatBox = (question && question.tutname != 'None')?<ChatBox question = {question} />:null
 
     return (
+      <div>
+        <Navbar />
       <div className="container section question-details">
         <div className="card z-depth-0">
           <div className="card-content">
-            <span className="card-title">Question - { id }</span>
+            <span className="card-title">Question - { question && question.content }</span>
             
-            <p>{question && question.content}</p>
+            {/* <p>{question && question.content}</p> */}
           </div>
           { quesComments }
           <div className="card-action grey lighten-4 grey-text">
             <div>Posted by {question && question.stuname}</div>
-            <div>{question.creationTime}</div>
+            <div>{question && question.creationTime}</div>
           </div>
           <div>
             { reassignButtons }
@@ -75,6 +78,7 @@ class QuestionDetails extends Component  {
         <div>
           { chatBox }
         </div>
+      </div>
       </div>
     )
   }

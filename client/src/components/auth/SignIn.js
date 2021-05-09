@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import {Redirect} from 'react-router-dom';
 import {login} from '../../store/actions/authActions'
 import {connect} from 'react-redux';
+import loginImg from "./login.svg";
+import './styles.css'
 
-class SignIn extends Component {
+class SignIn extends React.Component {
   state = {
     uname: '',
     password: ''
@@ -15,34 +17,46 @@ class SignIn extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log('signin submit', this.state);
+    console.log('signin submit', this.state);
     this.props.login(this.state)
+    //window.open('/',"_self")
   }
+  // constructor(props) {
+  //   super(props);
+  // }
+
   render() {
-    
-    const redir = this.props.isAuthenticated == true && <Redirect to='/' />
-    // console.log(this.props)
+    const redir = this.props.isAuthenticated == true && <Redirect to='/dashboard' />
     return (
-      <div className="container">
+      <div className="base-container" ref={this.props.containerRef}>
         {redir}
-        <form className="white" onSubmit={this.handleSubmit}>
-          <h5 className="grey-text text-darken-3">Sign In</h5>
-          <div className="input-field">
-            <label htmlFor="uname">Username</label>
-            <input type="text" id='uname' onChange={this.handleChange} required={true}/>
+        <div className="header">Login</div>
+        <div className="content">
+          <div className="image">  
+            <img src={loginImg} />
           </div>
-          <div className="input-field">
-            <label htmlFor="password">Password</label>
-            <input type="password" id='password' onChange={this.handleChange}  required={true}/>
-          </div>
-          <div className="input-field">
-            <button className="btn pink lighten-1 z-depth-0">Login</button>
-          </div>
+          <form className="white" onSubmit={this.handleSubmit}>
+          <div className="form">
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" id='uname' onChange={this.handleChange} required={true}/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" id='password' onChange={this.handleChange}  required={true}/>
+            </div>
+        <div className="footer">
+          <button type="submit" className="btn">
+            Login
+          </button>
+        </div>
+        </div>
         </form>
-      </div>
-    )
+      </div></div>
+    );
   }
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
