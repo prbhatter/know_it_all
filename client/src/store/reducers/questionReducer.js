@@ -109,6 +109,11 @@ const questionReducer = (state = initState, action) => {
         ...state,
         messages: action.payload.messages
     }
+    case 'NEW_MESSAGE':
+      return {
+        ...state,
+        messages: [...state.questions.messages, action.payload]
+      }
     default:
       // console.log('default questionReducer', state);
       return state

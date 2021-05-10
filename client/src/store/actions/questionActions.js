@@ -310,3 +310,16 @@ export const getMessages = (question) => async (dispatch, getState) =>{
     });
   }
 };
+
+export const newMessage = (message) => async (dispatch, getState) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  console.log('questionActions new message', message);
+    dispatch({
+      type: 'NEW_MESSAGE',
+      payload: message,
+    });
+};
