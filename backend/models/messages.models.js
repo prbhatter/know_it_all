@@ -22,6 +22,10 @@ const messageSchema = new mongoose.Schema({
     quesId: {
         type: String,
         required: true
+    },
+    sender: {
+        type: String,
+        required: true
     }
 })
 

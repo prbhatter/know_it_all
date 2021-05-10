@@ -273,7 +273,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
         const expired = false
 
         const questionUpdate = {
@@ -322,7 +322,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
         const expired = false
         const subject = req.body.subject
 
@@ -411,7 +411,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 15              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
         const expired = false
 
         const question = req.body
@@ -567,7 +567,6 @@ router.get('/get-messages/:id', async (req, res) => {
     console.log('get messages profile home', quesid)
     const question = await questionModel.findOne({_id: quesid})
     const messages = await messageModel.find({ stuname: question.stuname, tutname: question.tutname, quesId: question._id })
-    console.log('GET MESSAGES', messages)
     return res.status(200).json({type: 'GET_MESSAGES', messages: messages})
 })
 
@@ -583,28 +582,29 @@ router.post('/send-message', async (req, res) => {
         creationTime: creationTime,
         stuname: question.stuname,
         tutname: question.tutname,
+        sender: user.uname,
         quesId: question._id
     }
     let newMessageModel = new messageModel(message)
     await newMessageModel.save()
 
     let notification = {
-        type: 'NEW_NOTIFICATION',
+        type: 'SEND_MESSAGE',
         creationTime: creationTime,
         stuname: question.stuname,
-        tutname: question.tutname,
-        subject: question.subject,
-        questionId: question._id
+        tutname: question.tutname
     }
     let newNotificationModel = new notificationModel(notification)
     await newNotificationModel.save();
 
+
     const clients = req.clients;
     // console.log('profile home req.clients', clients)
 
-    const notificationReciever = (user.uname == question.tutname)?question.stuname:question.tutname
-    let socket = clients[notificationReciever]
+    const chatReciever = (user.uname == question.tutname)?question.stuname:question.tutname
+    let socket = clients[chatReciever]
     if(socket){
+        socket.emit('chat', newMessageModel);
         socket.emit('notify', newNotificationModel);
     }
 

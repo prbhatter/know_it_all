@@ -38,7 +38,7 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: stateQuestions
       }
-    case 'REASSIGN_QUESTION': 
+    case 'CLOSED_QUESTION': 
         console.log('closed question', action.payload);
         stateQuestions = state.questions
         stateQuestions.forEach(question => {
@@ -109,6 +109,11 @@ const questionReducer = (state = initState, action) => {
         ...state,
         messages: action.payload.messages
     }
+    case 'NEW_MESSAGE':
+      return {
+        ...state,
+        messages: [...state.questions.messages, action.payload]
+      }
     default:
       // console.log('default questionReducer', state);
       return state
