@@ -7,11 +7,13 @@ import { raiseQuestion } from '../../store/actions/questionActions'
 import { myQuestions } from '../../store/actions/questionActions'
 import ChatBox from '../chat/ChatBox'
 import Navbar from '../layout/Navbar'
+import { checkAnswer } from '../../store/actions/questionActions'
 
 class QuestionDetails extends Component  {
   componentWillMount() {
     this.props.getQuestion(this.props.match.params.id) 
     this.props.checkComments(this.props.match.params.id) 
+    this.props.checkAnswer(this.props.match.params.id) 
   }
   handleOnClick = (type) => {
       const question = this.props.getquestion
@@ -22,6 +24,12 @@ class QuestionDetails extends Component  {
       this.props.history.push("/my-questions")
   }
   render(){
+    let alreadyanswers=[];
+      if(this.props.checkanswer){
+        for(let i=this.props.checkanswer.length-1;i>=0;i--){ 
+          alreadyanswers.push(this.props.checkanswer[i].content)
+        }
+      }
     let previouscomments=[];
     if(this.props.questioncomments){
     for(let i=this.props.questioncomments.length-1;i>=0;i--){ 
@@ -31,26 +39,44 @@ class QuestionDetails extends Component  {
     const question = this.props.getquestion;
     console.log("QUESTION DETAILS",this.props.getquestion)
     const id = this.props.match.params.id;
-    let quesComments=<div>
+    let quesComments=<div className="container" style={{marginTop:50,backgroundColor: "darkseagreen",
+    borderRadius: 30}}>
+                      <h4 style={{marginRight:960}}>COMMENTS</h4>
                       <div className="container">
                         <ol>
                           {previouscomments.map((comment) => (
-                            <li key={comment._id}>{comment}</li>
+                            <li style={{marginRight:900}} key={comment._id}>{comment}</li>
                           ))}
                         </ol>
                       </div>
                     </div>
+    let prevans=(this.props.checkquestion)?<div className="container" style={{backgroundColor: "aquamarine",
+      borderRadius: 30}}>
+    <h4 style={{marginRight:870}}>PREVIOUS ANSWERS</h4>
+    <div className="container"> 
+    <ol>
+      {alreadyanswers.map((answer) => (
+        <li style={{marginRight:900}} key={answer._id}>{answer}</li>
+      ))}
+    </ol>
+    </div>
+    </div>:null                
     let reassignButtons = (question && question.expired && !question.closed)?
                                                 <div>
-                                                  <button onClick={() => this.handleOnClick('same')}>Reassign to same</button>
-                                                  <button onClick={() => this.handleOnClick('different')}>Reassign to different</button>
-                                                  <button onClick={() => this.handleOnClick('any')}>Reassign to any</button>
-                                                  <button onClick={() => this.handleOnClick('close')}>Close</button>
+                                                  <div style={ {flexDirection: "row" ,marginLeft: 20, justifyContent: 'space-evenly'} }>
+                                                  <button style={{marginTop:30,marginRight:40}}  className="btn pink lighten-1" onClick={() => this.handleOnClick('same')}>Reassign to same</button>
+                                                  <button style={{marginTop:30,marginRight:40}}className="btn pink lighten-1"  onClick={() => this.handleOnClick('any')}>Reassign to any</button>
+                      
+                                                  {/* <div style={ {flexDirection: "row" ,marginLeft: 20,marginTop:10, justifyContent: 'space-evenly'} }> */}
+                                                  <button style={{marginTop:30,marginRight:40}}className="btn pink lighten-1" onClick={() => this.handleOnClick('different')}>Reassign to different</button>
+                                                   <button style={{marginTop:30}} className="btn pink lighten-1" onClick={() => this.handleOnClick('close')}>Close</button>
+                                                   </div>
                                                 </div>
+
                                                 : null
     let isAnsweredButton = (question && !question.isAnswered)?
                                           <div>
-                                            <button onClick={() => this.handleOnClick('close')}>Question is Answered</button>
+                                            <button style={{marginTop:40}}className="btn pink lighten-1" onClick={() => this.handleOnClick('close')}>Question is Answered</button>
                                           </div>
                                           : null
     let chatBox = (question && question.tutname != 'None')?<ChatBox question = {question} />:null
@@ -61,15 +87,17 @@ class QuestionDetails extends Component  {
       <div className="container section question-details">
         <div className="card z-depth-0">
           <div className="card-content">
-            <span className="card-title">Question - { question && question.content }</span>
-            
+            <h2 style={{marginRight:950,marginTop:50}}>Question:</h2>
+            {/* <br /> */}
+            <h3 style={{marginRight:970,marginTop:0}}>{ question && question.content }</h3>
             {/* <p>{question && question.content}</p> */}
           </div>
+          {prevans}
           { quesComments }
-          <div className="card-action grey lighten-4 grey-text">
+          {/* <div className="card-action grey lighten-4 grey-text">
             <div>Posted by {question && question.stuname}</div>
             <div>{question && question.creationTime}</div>
-          </div>
+          </div> */}
           <div>
             { reassignButtons }
             { isAnsweredButton }
@@ -88,6 +116,7 @@ const mapDispatchToProps = (dispatch) => {
     getQuestion: (quessid) => dispatch(getQuestion(quessid)),
     checkComments: (quessid) => dispatch(checkComments(quessid)),
     raiseQuestion: (question) => dispatch(raiseQuestion(question)),
+    checkAnswer: (id) => dispatch(checkAnswer(id))
     // myQuestions: (uname) => dispatch(myQuestions(uname))
   }
 }

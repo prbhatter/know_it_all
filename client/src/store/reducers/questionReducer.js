@@ -38,7 +38,7 @@ const questionReducer = (state = initState, action) => {
         ...state,
         questions: stateQuestions
       }
-    case 'REASSIGN_QUESTION': 
+    case 'CLOSED_QUESTION': 
         console.log('closed question', action.payload);
         stateQuestions = state.questions
         stateQuestions.forEach(question => {
