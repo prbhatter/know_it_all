@@ -16,6 +16,7 @@ import Navbar from '../layout/Navbar'
 //   <textarea></textarea>
 // }
 class QuestionSummary extends Component  {
+
   componentDidMount(){ 
     this.props.checkComments(this.props.question._id)
     this.props.checkAnswer(this.props.question._id) 

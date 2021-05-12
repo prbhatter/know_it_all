@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React,{Component } from 'react'
 import {connect} from 'react-redux';
 import { newMessage, sendMessage } from '../../store/actions/questionActions'
 import { getMessages } from '../../store/actions/questionActions'
@@ -16,12 +16,34 @@ var connectionOptions =  {
 const socket = socketIOClient(ENDPOINT, connectionOptions);
 
 class ChatBox extends Component{
-
+  constructor(props) {
+    super(props);
+    this.chatContainer = React.createRef();
+    this.setState(
+      {},
+      () => this.scrollToMyRef()
+    );
+  }
+  
+    
     state = {
-        content : ''
+        content : '',
+        vis:false
     }
+    // componentDidMount(){
+    //   this.setState(
+    //     {},
+    //     () => this.scrollToMyRef()
+    //   );
+    // }
+    // componentDidUpdate(){
+    //   this.setState(
+    //     {},
+    //     () => this.scrollToMyRef()
+    //   );
+    // }
     componentWillMount() {
-
+      
       socket.on('connection', () => {
         socket.send({
           type: 'connected',
@@ -36,34 +58,61 @@ class ChatBox extends Component{
 
       console.log('ChatBox', this.props.question)
       this.props.getMessages(this.props.question)
+      // this.setState(
+      //       {},
+      //       () => this.scrollToMyRef()
+      //     );
     }
-
+   
     handleChange = (e) => {
        this.setState({
          [e.target.id]: e.target.value
        })
     }
+    handleOnClick =  (e) => {
+      //this.props.checkComments(this.props.question._id)
+       // console.log('buton click',this.props.question._id);
+       this.setState(state => ({
+        vis: !state.vis
+      }));
+      }
 
     handleSubmit = (e) => {
       e.preventDefault();
       const content = this.state.content
       console.log('chat message', content);
-      this.setState({
-        content: ''
-      })
+      // this.setState({
+      //   content: ''
+      // })
+        //  this.setState(
+        //     {},
+        //     () => this.scrollToMyRef()
+        //   );
       this.props.sendMessage(this.props.question, content, this.props.user)
       this.props.getMessages(this.props.question)
     }
+    scrollToMyRef = () => {
+      const scroll =
+        this.chatContainer.current.scrollHeight -
+        this.chatContainer.current.clientHeight;
+      this.chatContainer.current.scrollTo(0, scroll);
+    };
 
     render() {
         
         const messages = this.props.messages
 
         return (
-            <div className="chatWindow">
+            <div>
+              {/* <button onClick={this.handleOnClick}>Chat</button> */}
+              <a href="#niche" style={ { paddingTop:10, marginLeft: 1050,marginBottom:15 } } class="btn pink lighten-1 smoothScroll" onClick={this.handleOnClick}>Chat</a>
+            {this.state.vis?<div><div className="chatWindow"  id="niche" >
+            <div id="tut">
+                  <p id="tutname">{this.props.question.tutname}</p>
+                </div>
                 {/* <div>
                   <div className="container">
-                      <ul>
+                      <ul> 
                           {messages && messages.map((message) => (
                               <li key={message._id}><div>{message.content}</div><div>{message.creationTime}</div></li>
                           ))}
@@ -78,22 +127,25 @@ class ChatBox extends Component{
                           <button className="btn pink lighten-1">Send</button>
                       </div>
                   </form>
+        
                 </div> */}
-                <ul className="chat" id="chatList">
+                
+                
+                <ul className="chat" id="chatList" ref={this.chatContainer}>
                   {messages && messages.map(message => (
                     <div key={message._id}>
                       {this.props.user.uname == message.sender ? (
                         <li className="self">
                           <div className="msg">
-                            <p>{message.sender}</p>
+                            {/* <p>{message.sender}</p> */}
                             <div className="message"> {message.content}</div>
                           </div>
                         </li>
                       ) : (
                         <li className="other">
-                          <div className="msg">
-                            <p>{message.sender}</p>
-                          <div className="message"> {message.content} </div>
+                          <div className="msg" style={{backgroundColor: '#f4f7f9'}}>
+                            {/* <p>{message.sender}</p> */}
+                          <div className="message" style={{color:'black'}}> {message.content} </div>
                           </div>
                         </li>
                       )}
@@ -102,7 +154,7 @@ class ChatBox extends Component{
                 </ul>
                 <div className="chatInputWrapper">
                   <form onSubmit={this.handleSubmit} >
-                    <textarea
+                    <textarea 
                       className="textarea input materialize-textarea"
                       id='content'
                       placeholder="Enter your message..."
@@ -110,13 +162,14 @@ class ChatBox extends Component{
                       value={this.state.content}
                       rows={1}
                       cols={2}
-                      style={ { width: 370, marginRight: 100 } }
+                      style={ { width: 240, marginRight: 100 } }
                     />
                     <div className="input-field">
-                        <button className="btn pink lighten-1" style={ { position: 'absolute', bottom: 10, right: 10 } }>Send</button>
+                        <button className="btn" style={ { position: 'absolute', bottom: 10, right: 10 ,backgroundColor:'#056162'} }>Send</button>
                     </div>
                   </form>
                 </div>
+            </div></div>:null}
             </div>
         )}
 

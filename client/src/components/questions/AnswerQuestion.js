@@ -79,7 +79,7 @@ class Answers extends React.Component  {
             <h1 className="grey-text text-darken-3" id="raise">Answer This Question</h1>
           { this.props.checkquestion?
           <div>
-          <div style={{backgroundColor: "darkseagreen"}}>
+          <div style={{backgroundColor: "darkseagreen",borderRadius:70}}>
             <h4 style={{marginRight:870}}>PREVIOUS ANSWERS</h4>
             <div className="container"> 
             <ol>
@@ -91,7 +91,7 @@ class Answers extends React.Component  {
           <form className="container" onSubmit={this.handleSubmit}>
           <div style={{marginTop:60}} className="input-field">
               <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
-              <label htmlFor="content">Enter your Answer</label>
+              <label style={{fontSize:15}} htmlFor="content">Enter your Answer</label>
           </div>
           <div className="input-field">
               <button className="btn pink lighten-1">Raise</button>
