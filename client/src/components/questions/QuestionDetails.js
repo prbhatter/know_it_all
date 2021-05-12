@@ -10,15 +10,17 @@ import Navbar from '../layout/Navbar'
 
 class QuestionDetails extends Component  {
   componentWillMount() {
-    this.props.getQuestion(this.props.match.params.id) 
-    this.props.checkComments(this.props.match.params.id) 
+    this.props.match.params && this.props.match.params.id && this.props.getQuestion(this.props.match.params.id)
+    this.props.match.params && this.props.match.params.id && this.props.checkComments(this.props.match.params.id) 
   }
   handleOnClick = (type) => {
       const question = this.props.getquestion
       console.log('reassign', question);
-      question.reassignType = type
-      question.uname = this.props.user.uname
-      this.props.raiseQuestion(question)
+      if(question && this.props.user){
+        question.reassignType = type
+        question.uname = this.props.user.uname
+        this.props.raiseQuestion(question)
+      }
       this.props.history.push("/my-questions")
   }
   render(){

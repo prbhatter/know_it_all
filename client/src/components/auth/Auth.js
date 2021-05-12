@@ -15,18 +15,18 @@ constructor(props) {
 
   componentDidMount() {
     //Add .right by default
-    this.rightSide.classList.add("right");
+    this.rightSide && this.rightSide.classList && this.rightSide.classList.add("right");
   }
 
   changeState() {
     const { isLogginActive } = this.state;
 
     if (isLogginActive) {
-      this.rightSide.classList.remove("right");
-      this.rightSide.classList.add("left");
+      this.rightSide && this.rightSide.classList && this.rightSide.classList.remove("right");
+      this.rightSide && this.rightSide.classList && this.rightSide.classList.add("left");
     } else {
-      this.rightSide.classList.remove("left");
-      this.rightSide.classList.add("right");
+      this.rightSide && this.rightSide.classList && this.rightSide.classList.remove("left");
+      this.rightSide && this.rightSide.classList && this.rightSide.classList.add("right");
     }
     this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
   }

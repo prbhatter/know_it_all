@@ -48,9 +48,9 @@ class LandingPage extends React.Component
                           <li><a href="#contact" class="smoothScroll">Contact</a></li>
                       </ul>
 
-                      <ul class="nav navbar-nav navbar-right">
+                      {/* <ul class="nav navbar-nav navbar-right">
                           <li><a href="#"><i class="fa fa-phone"></i> +919123600426</a></li>
-                      </ul>
+                      </ul> */}
                 </div>
 
             </div>

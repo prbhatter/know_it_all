@@ -14,12 +14,12 @@ class SignedInLinkss extends Component {
     e.preventDefault();
     // console.log('logout button', this.props)
     this.props.logout()
-    this.props.history.push('/dashboard')
+    this.props.history && this.props.history.push('/dashboard')
    // window.open("/dashboard","_self") 
   }
 
   render (){
-    // const Navigate = (this.state.navigate == true) && <Redirect to='/' />
+    // const Navigate = (this.state.navigate && this.state.navigate == true) && <Redirect to='/' />
     return ( 
       <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
         <div className="container">

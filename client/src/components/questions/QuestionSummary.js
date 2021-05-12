@@ -1,57 +1,47 @@
 import React, { Component } from 'react'
 import '../auth/SignUp.css'
-import Answer from './AnswerQuestion'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { raiseComment } from '../../store/actions/questionActions'
 import { checkComments } from '../../store/actions/questionActions'
 import { NavLink } from 'react-router-dom'
 import './question.css'
-import Navbar from '../layout/Navbar'
-// import { moment } from 'moment'
 
-// function handleClick() {
-//   console.log('buton click');
-//   <textarea></textarea>
-// }
 class QuestionSummary extends Component  {
-  componentDidMount(){ 
-    this.props.checkComments(this.props.question._id)
-  }
+
   constructor(props) {
     super(props);
     this.state = {
       visibility: false
     };
-    this.props.checkComments(this.props.question._id)
+    this.props.question && this.props.question._id && this.props.checkComments(this.props.question._id)
     this.handleClick = this.handleClick.bind(this);
   }
-  // state={
-  //   navi : false
-  // }
-  // this.handleClick = this.handleClick.bind(this);
+
+  componentDidMount(){ 
+    this.props.question && this.props.question._id && this.props.checkComments(this.props.question._id)
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     //console.log('raiseQuestion.js', this.props)
     // console.log(this.props)
-    const comment = { content: this.state.content, uname: this.props.user.uname, quesid:this.props.question._id }
+    const comment = (this.props.user && this.props.question)?{ content: this.state.content, uname: this.props.user.uname, quesid:this.props.question._id }:null
     console.log('submit raise comment', comment);
-    this.props.raiseComment(comment) 
+    comment && this.props.raiseComment(comment) 
     // this.props.myQuestions(this.props.uname)
     this.setState(state => ({
       visibility: !state.visibility  
     }));
     // window.open("/assign-questions","_self")
-    //this.props.history.push("/my-questions") 
+    //this.props.history.push("/my-questions")
   
   }
   handleClick() {
-    this.props.checkComments(this.props.question._id)
-      console.log('buton click',this.props.question._id);
-      this.setState(state => ({
-        visibility: !state.visibility
-      }));
-    }
+    this.props.question && this.props.question._id && this.props.checkComments(this.props.question._id)
+    this.setState(state => ({
+      visibility: !state.visibility
+    }));
+  }
     handleChange = (e) => { 
       console.log('QUES SUMMARY PROPS',this.props.isAuthenticated)
       this.setState({
@@ -59,25 +49,22 @@ class QuestionSummary extends Component  {
       }) 
     }
   render() {
-    //  this.props.checkComments(this.props.question._id)
+
     let previouscomments=[];
     if(this.props.questioncomments){
-      for(let i=this.props.questioncomments.length-1;i>=0;i--)
-      { 
+      for(let i=this.props.questioncomments.length-1;i>=0;i--){ 
         previouscomments.push(this.props.questioncomments[i].content)
-      }}
-    console.log('ques summary',this.props.meraquestionscheck)  
-    const name = ( this.props.question.anonymous == 'Yes' ) ? 'Anonymous' : this.props.question.stuname
-    const utc = this.props.question.creationTime
-    const quesid=this.props.question._id;  
-    console.log('QUESTION SUMMARY',quesid)
-    // const m = moment.unix(utc).utc().format('YYYY-MM-DD HH:mm:ss');
-    // console.log(m);
-   const content= this.props.assignedquestionpage?<NavLink to={`/answer-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
-   const content1= this.props.myquestionscheck?<NavLink to={`/details-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:<span className="card-title ">{ this.props.question.content }</span> 
-   const finalcontent =this.props.assignedquestionpage?content:content1
-   let button = (this.props.isAuthenticated)?<button class="btn pink lighten-1" id="bt" onClick={this.handleClick}>Comment</button>:null
-   let textArea=(this.state.visibility)?<form className="container" onSubmit={this.handleSubmit}>
+      }
+    }
+    console.log('ques summary',this.props.meraquestionscheck)
+    const name = (this.props.question && this.props.question.anonymous == 'Yes' ) ? 'Anonymous' : ((this.props.question)? this.props.question.stuname:'')
+    const utc = (this.props.question)?this.props.question.creationTime:(Math.floor(Date.now()/1000))
+    const quesid = (this.props.question)?this.props.question._id:'';
+    const content = (this.props.assignedquestionpage && this.props.question)?<NavLink to={`/answer-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:((this.props.question)?<span className="card-title ">{ this.props.question.content }</span>:null) 
+    const content1 = (this.props.myquestionscheck && this.props.question)?<NavLink to={`/details-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:((this.props.question)?<span className="card-title ">{ this.props.question.content }</span>:null)
+    const finalcontent = (this.props.assignedquestionpage)?content:content1
+    let button = (this.props.isAuthenticated)?<button class="btn pink lighten-1" id="bt" onClick={this.handleClick}>Comment</button>:null
+    let textArea=(this.state.visibility)?<form className="container" onSubmit={this.handleSubmit}>
       <div className="input-field">
         <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
         <label htmlFor="content">Enter your comment</label>
@@ -89,7 +76,7 @@ class QuestionSummary extends Component  {
     let quesComments=(this.state.visibility)?<div>
       <div className="container">
           <ol>
-            {previouscomments.map((comment) => (
+            {previouscomments && previouscomments.map((comment) => (
               <li key={comment._id}>{comment}</li>
             ))}
           </ol>

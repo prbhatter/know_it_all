@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import QuestionList from './QuestionList'
 import Notifications from '../dashboard/Notifications'
 import { connect } from 'react-redux'
@@ -8,7 +8,7 @@ import { myQuestions } from '../../store/actions/questionActions'
 class MyQuestions extends React.Component {
   componentDidMount() {
     console.log('MyQuestions', this.props.uname)
-    this.props.myQuestions(this.props.uname)
+    this.props.uname && this.props.myQuestions(this.props.uname)
   } 
   render() {
     const { myquestions } = this.props

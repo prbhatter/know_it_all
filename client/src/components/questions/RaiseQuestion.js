@@ -3,7 +3,6 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import '../auth/SignUp.css'
 import { raiseQuestion } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router";
 import Navbar from '../layout/Navbar'
 import { myQuestions } from '../../store/actions/questionActions'
@@ -38,17 +37,14 @@ class RaiseQuestions extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    //console.log('raiseQuestion.js', this.props)
-    // console.log(this.props)
-    const question = { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility }
+    const question = (this.props.user) ? { subject: this.state.subject, content: this.state.content, uname: this.props.user.uname, anonymous: this.state.anonymous, visibility: this.state.visibility } : null
     console.log('submit raise', question);
-    this.props.raiseQuestion(question)
-    this.props.myQuestions(this.props.uname)
+    question && this.props.raiseQuestion(question)
+    this.props.uname && this.props.myQuestions(this.props.uname)
     this.setState({
       navigate: true
     })
     window.open("/my-questions","_self")
-
   }
   render() {
   //  const Navigate = ((!this.props.isAuthenticated) || this.state.navigate) && <Redirect to='/my-questions' />
@@ -72,7 +68,6 @@ class RaiseQuestions extends Component {
     return (
       <div className="container">
         <Navbar />
-        {/* { Navigate } */}
         <form className="white" onSubmit={this.handleSubmit}>
           <h1 className="grey-text text-darken-3" id="raise">Raise a New Question</h1>
           <div  style={{marginTop:30}} className="input-field">

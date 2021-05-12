@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
-import { Multiselect } from 'multiselect-react-dropdown';
 import '../auth/SignUp.css'
 import { raiseAnswer } from '../../store/actions/questionActions'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router";
 import { checkAnswer } from '../../store/actions/questionActions'
 import ChatBox from '../chat/ChatBox'
 
-// componentDidMount() {
-//   this.props.checkAnswer(this.props.match.params.id)
-// }
-
-// const getquestion= ({req.params.id})
 let solutions = []
 class Answers extends React.Component  { 
   state = {
@@ -20,7 +13,7 @@ class Answers extends React.Component  {
   } 
  componentWillMount() {
     console.log('PROPS ANSWER',this.props.checkanswer)
-    this.props.checkAnswer(this.props.match.params.id) 
+    this.props.match.params && this.props.match.params.id && this.props.checkAnswer(this.props.match.params.id)
   }
   handleChange = (e) => {
     console.log('answer ka props');
@@ -30,14 +23,14 @@ class Answers extends React.Component  {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    const id=this.props.match.params.id;
+    const id=(this.props.match.params)?this.props.match.params.id:'';
     //console.log('raiseQuestion.js', this.props) 
     // console.log(this.props) 
     const answer = {content: this.state.content}
     // answer.push(id)
     answer.idd=id;
     console.log('submit answer', answer);
-    this.props.raiseAnswer(answer,id)
+    answer && id && this.props.raiseAnswer(answer,id)
     window.open("/assign-questions","_self")
 
   }
@@ -50,14 +43,14 @@ class Answers extends React.Component  {
           alreadyanswers.push(this.props.checkanswer[i].content)
         }
       }
-      console.log('ANSWERS KIYA HUA', this.props)
+      // console.log('ANSWERS KIYA HUA', this.props)
       const question = this.props.checkquestion
       let chatBox = (question && question.tutname != 'None')?<ChatBox question = {question} />:null
 
       return (  
         <div className="container">
             
-          { this.props.checkquestion.isAnswered?
+          { (this.props.checkquestion && this.props.checkquestion.isAnswered)?
           <div>
             <div className="container">
             <ol>
@@ -80,10 +73,10 @@ class Answers extends React.Component  {
           <form className="container" onSubmit={this.handleSubmit}>
           <div className="input-field">
               <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
-              <label htmlFor="content">Badhwa Answer</label>
+              <label htmlFor="content">Answer</label>
           </div>
           <div className="input-field">
-              <button className="btn pink lighten-1">Raise</button>
+              <button className="btn pink lighten-1">Answer</button>
             </div>
           </form>}
           <div>

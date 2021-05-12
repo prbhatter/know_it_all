@@ -31,11 +31,11 @@ class ChatBox extends Component{
 
       socket.on('chat', (message) => {
         console.log('got chat from server !', message);
-        this.props.newMessage(message)
+        message && this.props.newMessage(message)
       })
 
       console.log('ChatBox', this.props.question)
-      this.props.getMessages(this.props.question)
+      this.props.question && this.props.getMessages(this.props.question)
     }
 
     handleChange = (e) => {
@@ -51,8 +51,8 @@ class ChatBox extends Component{
       this.setState({
         content: ''
       })
-      this.props.sendMessage(this.props.question, content, this.props.user)
-      this.props.getMessages(this.props.question)
+      this.props.user && content && this.props.question && this.props.sendMessage(this.props.question, content, this.props.user)
+      this.props.question && this.props.getMessages(this.props.question)
     }
 
     render() {
@@ -82,7 +82,7 @@ class ChatBox extends Component{
                 <ul className="chat" id="chatList">
                   {messages && messages.map(message => (
                     <div key={message._id}>
-                      {this.props.user.uname == message.sender ? (
+                      {this.props.user && message && this.props.user.uname == message.sender ? (
                         <li className="self">
                           <div className="msg">
                             <p>{message.sender}</p>
@@ -90,12 +90,14 @@ class ChatBox extends Component{
                           </div>
                         </li>
                       ) : (
-                        <li className="other">
+                        (message)?
+                        (<li className="other">
                           <div className="msg">
                             <p>{message.sender}</p>
                           <div className="message"> {message.content} </div>
                           </div>
-                        </li>
+                        </li>)
+                        :null
                       )}
                     </div>
                   ))}
