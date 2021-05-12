@@ -182,12 +182,12 @@ export const assignedQuestions = (uname) => async (dispatch, getState) => {
 
   try {
     const res = await axios.get(`${uname}/assigned-questions`);
-    // console.log('myQuestions questionActions',res.data)
+    console.log('myQuestions questionActions',res.data)
     dispatch({
       type: 'ASSIGNED_QUESTIONS',
       payload: res.data,
     });
-
+ 
     // dispatch(setAlert(res.data.message, 'success'));
 
     // dispatch(getPosts());

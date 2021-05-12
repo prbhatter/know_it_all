@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router";
 import { checkAnswer } from '../../store/actions/questionActions'
 import ChatBox from '../chat/ChatBox'
+import Navbar from '../layout/Navbar'
 
 let solutions = []
 class Answers extends React.Component  { 
@@ -49,18 +50,38 @@ class Answers extends React.Component  {
 
       return (  
         <div className="container">
-            
-          { (this.props.checkquestion && this.props.checkquestion.isAnswered)?
+            <Navbar />
+            {/* <Typed
+                    strings={['Here you can find anything']}
+                    typeSpeed={40}
+                />
+                <br/>
+ 
+                <Typed
+                strings={[
+                    'Search for products',
+                    'Search for categories',
+                    'Search for brands']}
+                    typeSpeed={40}
+                    backSpeed={50}
+                    attr="placeholder"
+                    loop >
+                    <input type="text"/>
+                </Typed> */}
+            <h1 className="grey-text text-darken-3" id="raise">Answer This Question</h1>
+          { this.props.checkquestion?
           <div>
-            <div className="container">
+          <div style={{backgroundColor: "darkseagreen"}}>
+            <h4 style={{marginRight:870}}>PREVIOUS ANSWERS</h4>
+            <div className="container"> 
             <ol>
-              {alreadyanswers.map((answer) => (
-                <li key={answer._id}>{answer}</li>
+              {alreadyanswers && alreadyanswers.map((answer) => (
+                <li style={{marginRight:900}} key={answer._id}>{answer}</li>
               ))}
             </ol>
-            </div>
+            </div></div>
           <form className="container" onSubmit={this.handleSubmit}>
-          <div className="input-field">
+          <div style={{marginTop:60}} className="input-field">
               <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
               <label htmlFor="content">Enter your Answer</label>
           </div>

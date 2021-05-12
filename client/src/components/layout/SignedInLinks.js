@@ -47,7 +47,7 @@ class SignedInLinkss extends Component {
                       <li><a href="/" class="navbar-brand">PB</a></li>
                       </ul>
                       </div>
-                </div>
+                </div> 
         </div></section>
     )
     

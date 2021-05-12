@@ -4,10 +4,14 @@ import { connect } from 'react-redux'
 import { raiseComment } from '../../store/actions/questionActions'
 import { checkComments } from '../../store/actions/questionActions'
 import { NavLink } from 'react-router-dom'
+import { checkAnswer } from '../../store/actions/questionActions'
 import './question.css'
 
 class QuestionSummary extends Component  {
-
+  componentDidMount(){ 
+    this.props.question && this.props.checkComments(this.props.question._id)
+    this.props.question && this.props.checkAnswer(this.props.question._id) 
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +53,13 @@ class QuestionSummary extends Component  {
       }) 
     }
   render() {
-
+    let alreadyanswers=[];
+      if(this.props.checkanswer){
+        for(let i=this.props.checkanswer.length-1;i>=0;i--){ 
+          alreadyanswers.push(this.props.checkanswer[i].content)
+        }
+      }
+    //  this.props.checkComments(this.props.question._id)
     let previouscomments=[];
     if(this.props.questioncomments){
       for(let i=this.props.questioncomments.length-1;i>=0;i--){ 
@@ -73,6 +83,16 @@ class QuestionSummary extends Component  {
         <button className="btn pink lighten-1" id="bt">Comment</button> 
       </div>
       </form>:null
+      let prevans=(this.props.checkquestion)?<div>
+          <h4 style={{marginRight:870}}>PREVIOUS ANSWERS</h4>
+          <div className="container"> 
+          <ol>
+            {alreadyanswers.map((answer) => (
+              <li style={{marginRight:900}} key={answer._id}>{answer}</li>
+            ))}
+          </ol>
+          </div>
+          </div>:null
     let quesComments=(this.state.visibility)?<div>
       <div className="container">
           <ol>
@@ -102,7 +122,8 @@ class QuestionSummary extends Component  {
 const mapDispatchToProps = (dispatch) => {
   return {
     raiseComment: (comment) => dispatch(raiseComment(comment)),
-    checkComments: (quessid) => dispatch(checkComments(quessid))
+    checkComments: (quessid) => dispatch(checkComments(quessid)),
+    checkAnswer: (id) => dispatch(checkAnswer(id))
     // myQuestions: (uname) => dispatch(myQuestions(uname))
   }
 }
