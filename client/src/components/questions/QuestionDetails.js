@@ -86,8 +86,8 @@ class QuestionDetails extends Component  {
         <Navbar />
       <div className="container section question-details">
         <div className="card z-depth-0">
-          <div className="card-content">
-            <h2 style={{marginRight:950,marginTop:50}}>Question:</h2>
+          <div className="card-content ">
+            <h2 style={{marginRight:950,marginTop:50,width:650,textAlign: 'left'}}>Question (Assigned to {question && question.tutname})</h2>
             {/* <br /> */}
             <h3 style={{marginRight:970,marginTop:0}}>{ question && question.content }</h3>
             {/* <p>{question && question.content}</p> */}

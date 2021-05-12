@@ -8,6 +8,7 @@ import { checkAnswer } from '../../store/actions/questionActions'
 import './question.css'
 
 class QuestionSummary extends Component  {
+
   componentDidMount(){ 
     this.props.question && this.props.checkComments(this.props.question._id)
     this.props.question && this.props.checkAnswer(this.props.question._id) 
