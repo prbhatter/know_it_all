@@ -38,7 +38,7 @@ constructor(props) {
     return (
       <div className="App">
         <div className="login"> 
-          <div className="container" ref={ref => (this.container = ref)}>
+          <div className="container" style={{marginTop:140}} ref={ref => (this.container = ref)}>
             {isLogginActive && (
               <Login containerRef={ref => (this.current = ref)} />
             )}
