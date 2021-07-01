@@ -100,9 +100,10 @@ const questionReducer = (state = initState, action) => {
         questions: action.payload.questions
       }
     case 'SEND_MESSAGE':
+      console.log('SEND_MESSAGE',action.payload.message)
       return {
         ...state,
-        messages: [...stateQuestions, action.payload.message]
+        messages: [...state.messages, action.payload.message]
     }
     case 'GET_MESSAGES':
       return {
@@ -112,7 +113,7 @@ const questionReducer = (state = initState, action) => {
     case 'NEW_MESSAGE':
       return {
         ...state,
-        messages: [...state.questions.messages, action.payload]
+        messages: [...state.messages, action.payload]
       }
     default:
       // console.log('default questionReducer', state);

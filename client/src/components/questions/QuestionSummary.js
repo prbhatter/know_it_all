@@ -69,7 +69,15 @@ class QuestionSummary extends Component  {
     }
     console.log('ques summary',this.props.meraquestionscheck)
     const name = (this.props.question && this.props.question.anonymous == 'Yes' ) ? 'Anonymous' : ((this.props.question)? this.props.question.stuname:'')
+    
     const utc = (this.props.question)?this.props.question.creationTime:(Math.floor(Date.now()/1000))
+    let d = new Date(utc*1000)
+    // let date = d.toString()
+    let date="";
+    date += d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear() + 
+              " "+ d.getHours()+":"+d.getMinutes();
+
+
     const quesid = (this.props.question)?this.props.question._id:'';
     const content = (this.props.assignedquestionpage && this.props.question)?<NavLink to={`/answer-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:((this.props.question)?<span className="card-title ">{ this.props.question.content }</span>:null) 
     const content1 = (this.props.myquestionscheck && this.props.question)?<NavLink to={`/details-page/${this.props.question._id}`}><span className="card-title ">{ this.props.question.content }</span></NavLink>:((this.props.question)?<span className="card-title ">{ this.props.question.content }</span>:null)
@@ -109,7 +117,7 @@ class QuestionSummary extends Component  {
         <div className="card-content grey-text text-darken-3" id="questioncard">
           { finalcontent}
           <p>Posted by { name }</p> 
-          <p className="grey-text">{ utc }</p>
+          <p className="grey-text">{ date }</p>
           { button }
           { quesComments }
           { textArea }

@@ -599,9 +599,10 @@ router.post('/send-message', async (req, res) => {
 
 
     const clients = req.clients;
-    // console.log('profile home req.clients', clients)
+    console.log('profile home req.clients', clients)
 
     const chatReciever = (user.uname == question.tutname)?question.stuname:question.tutname
+    console.log('chat reciever ', chatReciever)
     let socket = clients[chatReciever]
     if(socket){
         socket.emit('chat', newMessageModel);

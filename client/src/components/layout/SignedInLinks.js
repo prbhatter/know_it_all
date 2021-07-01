@@ -44,7 +44,7 @@ class SignedInLinkss extends Component {
                       <ul class="nav navbar-nav navbar-right">
                         
                       <li style={{marginRight:50}}><a onClick={this.handleOnClick} class="smoothScroll">Log Out</a></li> 
-                      <li><a href="/" class="navbar-brand">PB</a></li>
+                      <li><a href="/" class="navbar-brand">{this.props.user && this.props.user.uname}</a></li>
                       </ul>
                       </div>
                 </div> 
@@ -63,6 +63,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user
 });
 const SignedInLinks = withRouter(SignedInLinkss);
 export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks)

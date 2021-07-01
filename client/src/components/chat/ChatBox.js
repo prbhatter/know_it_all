@@ -54,10 +54,11 @@ class ChatBox extends Component{
       socket.on('chat', (message) => {
         console.log('got chat from server !', message);
         message && this.props.newMessage(message)
+        this.props.question && this.props.getMessages(this.props.question)
       })
-
-      console.log('ChatBox', this.props.question)
       this.props.question && this.props.getMessages(this.props.question)
+      console.log('ChatBox', this.props.question)
+      
     }
    
     handleChange = (e) => {
@@ -93,15 +94,18 @@ class ChatBox extends Component{
     render() {
         
         const messages = this.props.messages
+        const messageReciever = (this.props.user.uname==this.props.question.tutname)?this.props.question.stuname:this.props.question.tutname
 
         return (
             <div>
               {/* <button onClick={this.handleOnClick}>Chat</button> */}
               <a href="#niche" style={ { paddingTop:10, marginLeft: 1050,marginBottom:15 } } class="btn pink lighten-1 smoothScroll" onClick={this.handleOnClick}>Chat</a>
-            {this.state.vis?<div><div className="chatWindow"  id="niche" >
-            <div id="tut">
-                  <p id="tutname">{this.props.question.tutname}</p>
-                </div>
+              {this.state.vis?<div><div className="chatWindow"  id="niche" >
+              
+              <div id="tut">
+                  <p id="tutname">{messageReciever}</p>
+              </div>
+
                 {/* <div>
                   <div className="container">
                       <ul> 
