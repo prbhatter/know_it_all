@@ -12,7 +12,7 @@ A web project to help students gain knowledge and get rid of doubts in a simple 
 **Live chat portal demo link - [DEMO VIDEO](https://drive.google.com/file/d/1ygM0EWpgRgbRCku8mjYAbtygRd9ZYECu/view?usp=sharing)**
 
 **Screenshots -**
-![Start Up Page](/screenshots/ss1.jpg?raw=true "Start Up Page")
+![Start Up Page](/screenshots/ss1.jpg?raw=true "Start Up Page" | width=800)
 ![Sign Up](/screenshots/ss2_1.jpg?raw=true "Sign Up")
 ![Login](/screenshots/ss2_2.jpg?raw=true "Login")
 ![Raise A New Question](/screenshots/ss3.jpg?raw=true "Raise Question")
