@@ -19,4 +19,4 @@ A web project to help students gain knowledge and get rid of doubts in a simple 
 ![Dashboard with Live Notifications](/screenshots/ss4.jpg?raw=true "Dashboard")
 ![Answer Question](/screenshots/ss5.jpg?raw=true "Answer Question")
 ![Your raised question with certain options if expired](/screenshots/ss6.jpg?raw=true "Expired Question")
-<a href="/screenshots.jpg"><img src="/screenshots/ss7.jpg" align="left" width="100" alt="Raised Question"></a>
+<a href="/screenshots.jpg"><img src="/screenshots/ss7.jpg" align="left" width="500" alt="Raised Question"></a>
