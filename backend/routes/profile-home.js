@@ -183,7 +183,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const subject = req.body.subject
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 20              // 1 day = 86400 seconds
         const visibility = req.body.visibility
         const anonymous = req.body.anonymous
         const expired = false
@@ -273,7 +273,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 20              // 1 day = 86400 seconds
         const expired = false
 
         const questionUpdate = {
@@ -322,7 +322,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 20              // 1 day = 86400 seconds
         const expired = false
         const subject = req.body.subject
 
@@ -411,7 +411,7 @@ router.post('/:uname/my-questions',checkAuthenticated, async (req, res) => {
         const uname = req.params.uname
         const isAnswered = false
         const creationTime = Math.floor(Date.now()/1000)                        //unix timestamp in seconds
-        const expirationTime = Math.floor(Date.now()/1000) + 1000              // 1 day = 86400 seconds
+        const expirationTime = Math.floor(Date.now()/1000) + 20              // 1 day = 86400 seconds
         const expired = false
 
         const question = req.body

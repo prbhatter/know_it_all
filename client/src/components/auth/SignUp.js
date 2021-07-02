@@ -44,12 +44,16 @@ class SignUp extends Component {
     // console.log(this.state);
     // console.log('before submit')
     this.props.register(this.state)
+    window.open('/auth', "_self")
     // console.log(this.props)
     
   }
 
   render() {
-
+    const mystyle = {
+      marginTop:140,
+      height:700
+    }; 
     let typeOptions = [{option: 'Tutor'}, {option: 'Student'}]
     let subjectOptions = [{option: 'Mathematics'}, {option: 'Physics'}, {option: 'Chemistry'}]
 
@@ -69,7 +73,7 @@ class SignUp extends Component {
     // console.log(this.state)
     
     return (
-      <div className="container">
+      <div className="container" style={mystyle}>
         {redir}
         <form className="white" onSubmit={this.handleSubmit}>
           <h5 className="grey-text text-darken-3" >Sign Up</h5>

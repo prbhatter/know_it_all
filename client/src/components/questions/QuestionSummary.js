@@ -106,7 +106,7 @@ class QuestionSummary extends Component  {
       <div className="container">
           <ol>
             {previouscomments && previouscomments.map((comment) => (
-              <li key={comment._id}>{comment}</li>
+              <li key={comment._id} style={{textAlign: 'initial'}}>{comment}</li>
             ))}
           </ol>
           </div>
