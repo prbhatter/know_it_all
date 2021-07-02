@@ -9,3 +9,4 @@ A web project to help students gain knowledge and get rid of doubts in a simple 
 •	Students can close the question or reassign it.  
 •	Live chat feature and Notifications (using WebSockets).  
 
+# Live chat portal demo link - [DEMO VIDEO](https://drive.google.com/file/d/1ygM0EWpgRgbRCku8mjYAbtygRd9ZYECu/view?usp=sharing)
